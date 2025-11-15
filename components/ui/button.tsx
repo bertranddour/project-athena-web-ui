@@ -5,31 +5,30 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "neo-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border border-zinc-300/70 bg-zinc-200 px-7 py-3 text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-zinc-600 shadow-wave-button transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-400/50",
   {
     variants: {
       variant: {
-        default:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
-        outline:
-          "border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground",
+        primary: "",
+        outline: "bg-zinc-200 border-zinc-400",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
-        brand: "bg-[#2F6868] hover:bg-[#2F6868]/90 border-[#2F6868] text-white",
+          "bg-zinc-100 text-zinc-500 shadow-wave-well tracking-[0.2em]",
+        ghost:
+          "border-transparent bg-transparent shadow-none text-zinc-500 hover:bg-zinc-100",
+        brand:
+          "bg-teal-300/70 text-teal-800 border-teal-200/60 hover:bg-teal-200",
+        subtle:
+          "bg-zinc-100 text-zinc-600 shadow-wave-well tracking-[0.2em]",
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        icon: "size-9",
+        default: "px-7 py-3",
+        sm: "px-5 py-2 text-[0.6rem]",
+        lg: "px-10 py-4 text-[0.75rem]",
+        icon: "rounded-2xl p-2.5 text-[0.5rem] tracking-[0.2em]",
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "primary",
       size: "default",
     },
   },

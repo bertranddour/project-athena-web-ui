@@ -376,7 +376,7 @@ export function ThreadActionsView({
                   status === "reject" && "border-red-500 bg-red-200",
                   status === "edit" && "border-amber-500 bg-amber-200",
                   index === currentIndex &&
-                    "outline-primary outline-2 outline-offset-2",
+                    "outline-teal-500 outline-2 outline-offset-2",
                 )}
               >
                 <span className="sr-only">Action {index + 1}</span>

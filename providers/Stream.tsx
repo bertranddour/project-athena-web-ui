@@ -164,16 +164,16 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
   // Show the form if we: don't have an API URL, or don't have an assistant ID
   if (!finalApiUrl || !finalAssistantId) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center p-4">
-        <div className="animate-in fade-in-0 zoom-in-95 bg-background flex max-w-3xl flex-col rounded-lg border shadow-lg">
-          <div className="mt-14 flex flex-col gap-2 border-b p-6">
+      <div className="flex min-h-screen w-full items-center justify-center bg-zinc-200 p-4">
+        <div className="animate-in fade-in-0 zoom-in-95 flex max-w-3xl flex-col rounded-[1.8rem] border border-zinc-300/60 bg-zinc-200 shadow-wave-panel">
+          <div className="mt-14 flex flex-col gap-2 border-b border-zinc-300/60 p-6">
             <div className="flex flex-col items-start gap-2">
               <LangGraphLogoSVG className="h-7" />
               <h1 className="text-xl font-semibold tracking-tight">
                 Agent Chat
               </h1>
             </div>
-            <p className="text-muted-foreground">
+            <p className="text-sm text-zinc-600">
               Welcome to Agent Chat! Before you get started, you need to enter
               the URL of the deployment and the assistant / graph ID.
             </p>
@@ -194,20 +194,19 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
 
               form.reset();
             }}
-            className="bg-muted/50 flex flex-col gap-6 p-6"
+            className="flex flex-col gap-6 rounded-b-[1.8rem] bg-zinc-200/80 p-6"
           >
             <div className="flex flex-col gap-2">
               <Label htmlFor="apiUrl">
                 Deployment URL<span className="text-rose-500">*</span>
               </Label>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-sm text-zinc-500">
                 This is the URL of your LangGraph deployment. Can be a local, or
                 production deployment.
               </p>
               <Input
                 id="apiUrl"
                 name="apiUrl"
-                className="bg-background"
                 defaultValue={apiUrl || DEFAULT_API_URL}
                 required
               />
@@ -217,7 +216,7 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
               <Label htmlFor="assistantId">
                 Assistant / Graph ID<span className="text-rose-500">*</span>
               </Label>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-sm text-zinc-500">
                 This is the ID of the graph (can be the graph name), or
                 assistant to fetch threads from, and invoke when actions are
                 taken.
@@ -225,7 +224,6 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
               <Input
                 id="assistantId"
                 name="assistantId"
-                className="bg-background"
                 defaultValue={assistantId || DEFAULT_ASSISTANT_ID}
                 required
               />
@@ -233,7 +231,7 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
 
             <div className="flex flex-col gap-2">
               <Label htmlFor="apiKey">LangSmith API Key</Label>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-sm text-zinc-500">
                 This is <strong>NOT</strong> required if using a local LangGraph
                 server. This value is stored in your browser's local storage and
                 is only used to authenticate requests sent to your LangGraph
@@ -243,7 +241,6 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
                 id="apiKey"
                 name="apiKey"
                 defaultValue={apiKey ?? ""}
-                className="bg-background"
                 placeholder="lsv2_pt_..."
               />
             </div>

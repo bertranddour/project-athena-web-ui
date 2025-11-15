@@ -1,0 +1,955 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wave Artisans UI · Style Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap"
+    />
+    <style>
+      :root {
+        --zinc-50: oklch(0.985 0 0);
+        --zinc-100: oklch(0.967 0.0013 286.38);
+        --zinc-200: oklch(0.92 0.004 286.32);
+        --zinc-300: oklch(0.871 0.0055 286.29);
+        --zinc-400: oklch(0.712 0.0129 286.07);
+        --zinc-500: oklch(0.552 0.0138 285.94);
+        --zinc-600: oklch(0.442 0.0146 285.79);
+      }
+
+      .shadow-wave-panel {
+        box-shadow: 25px 25px 60px var(--zinc-400), -25px -25px 60px var(--zinc-50);
+      }
+      .shadow-wave-well {
+        box-shadow: 18px 18px 40px var(--zinc-400), -18px -18px 40px var(--zinc-50);
+      }
+      .shadow-wave-button {
+        box-shadow: 12px 12px 32px var(--zinc-400), -12px -12px 32px var(--zinc-50);
+      }
+      .shadow-wave-knob {
+        box-shadow: 22px 22px 44px var(--zinc-400), -22px -22px 44px var(--zinc-50);
+      }
+      .shadow-wave-knob-core {
+        box-shadow: inset 12px 12px 28px var(--zinc-300), inset -12px -12px 28px var(--zinc-50);
+      }
+      .shadow-wave-inset {
+        box-shadow: inset 20px 20px 40px var(--zinc-400), inset -20px -20px 40px var(--zinc-50);
+      }
+      .shadow-wave-slider {
+        box-shadow: inset 6px 6px 14px var(--zinc-300), inset -6px -6px 14px var(--zinc-50);
+      }
+      .shadow-wave-embossed {
+        box-shadow: inset 15px 15px 32px var(--zinc-300), inset -15px -15px 32px var(--zinc-50);
+      }
+      .input-embossed {
+        border: none;
+        box-shadow: inset 8px 8px 20px var(--zinc-300), inset -8px -8px 20px var(--zinc-50);
+      }
+      .input-embossed:focus {
+        box-shadow: inset 10px 10px 26px var(--zinc-400), inset -10px -10px 26px var(--zinc-50);
+      }
+      .wave-spinner {
+        width: 48px;
+        height: 48px;
+        border-radius: 999px;
+        border: 3px solid var(--zinc-300);
+        border-top-color: var(--zinc-600);
+        animation: wave-spin 1.8s linear infinite;
+      }
+      @keyframes wave-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .wave-skeleton {
+        border-radius: 999px;
+        background: linear-gradient(
+          120deg,
+          var(--zinc-200) 30%,
+          var(--zinc-50) 50%,
+          var(--zinc-200) 70%
+        );
+        background-size: 200% 100%;
+        animation: wave-shimmer 2.5s ease-in-out infinite;
+      }
+      @keyframes wave-shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      button {
+        border: none;
+      }
+
+      .neo-btn {
+        transition: transform 150ms ease, box-shadow 150ms ease;
+      }
+
+      .neo-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 16px 16px 36px var(--zinc-400), -16px -16px 36px var(--zinc-50);
+      }
+
+      .neo-btn:active {
+        transform: translateY(0);
+        box-shadow: inset 8px 8px 18px var(--zinc-300), inset -8px -8px 18px var(--zinc-50);
+      }
+
+      input.wave-toggle {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 68px;
+        height: 34px;
+        border-radius: 999px;
+        background-color: var(--zinc-200);
+        box-shadow: inset 8px 8px 18px var(--zinc-300), inset -8px -8px 18px var(--zinc-50);
+        position: relative;
+        cursor: pointer;
+        transition: background-color 220ms ease, box-shadow 220ms ease;
+      }
+
+      input.wave-toggle::after {
+        content: "";
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        background: linear-gradient(145deg, var(--zinc-50), var(--zinc-200));
+        box-shadow: 6px 6px 14px var(--zinc-400), -6px -6px 14px var(--zinc-50);
+        transition: transform 220ms ease, box-shadow 220ms ease;
+      }
+
+      input.wave-toggle:checked {
+        background-color: var(--zinc-100);
+        box-shadow: inset 6px 6px 14px var(--zinc-300), inset -6px -6px 14px var(--zinc-50);
+      }
+
+      input.wave-toggle:checked::after {
+        transform: translateX(30px);
+        box-shadow: 4px 4px 10px var(--zinc-400), -4px -4px 10px var(--zinc-50);
+      }
+
+      input.wave-toggle:focus-visible {
+        outline: 2px solid rgba(63, 63, 70, 0.35);
+        outline-offset: 4px;
+      }
+
+      input[type="range"].wave-slider {
+        -webkit-appearance: none;
+        appearance: none;
+        height: 18px;
+        border-radius: 999px;
+        background-color: var(--zinc-200);
+        box-shadow: inset 6px 6px 14px var(--zinc-300), inset -6px -6px 14px var(--zinc-50);
+        cursor: pointer;
+        outline: none;
+      }
+
+      input[type="range"].wave-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 999px;
+        background-color: var(--zinc-100);
+        border: 3px solid var(--zinc-50);
+        box-shadow: 6px 6px 12px var(--zinc-400), -6px -6px 12px var(--zinc-50);
+      }
+
+      input[type="range"].wave-slider::-moz-range-thumb {
+        width: 30px;
+        height: 30px;
+        border-radius: 999px;
+        background-color: var(--zinc-100);
+        border: 3px solid var(--zinc-50);
+        box-shadow: 6px 6px 12px var(--zinc-400), -6px -6px 12px var(--zinc-50);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-zinc-200 text-zinc-800 font-['Nunito_Sans',_system-ui,_-apple-system,_BlinkMacSystemFont,_sans-serif]">
+    <main class="w-full max-w-6xl mx-auto px-6 py-16 space-y-16">
+      <header class="text-center space-y-4">
+        <div class="flex justify-center mb-48">
+          <img src="images/wave-artisan-logo.svg" alt="Wave Artisans" class="h-36" />
+        </div>
+        <p class="uppercase text-xs tracking-[0.4em] text-zinc-500">Wave Artisans UI</p>
+        <h1 class="text-4xl md:text-5xl font-semibold">Neumorphic Style Guide</h1>
+        <p class="max-w-2xl mx-auto text-zinc-600">
+          Airy spacing, monochromatic zinc hues, and soft twin shadows keep the interface calm.
+          This page outlines the essential patterns that make the system feel cohesive.
+        </p>
+      </header>
+
+      <section class="space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-semibold">Typography system</h2>
+          <span class="text-sm uppercase tracking-[0.3em] text-zinc-500">Nunito Sans</span>
+        </div>
+        <div class="grid gap-6 md:grid-cols-2">
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-4">
+            <p class="text-sm uppercase tracking-[0.2em] text-zinc-500">Display · 48px / 1.1</p>
+            <p class="text-4xl font-semibold leading-tight">Craft expressive surfaces</p>
+            <p class="text-sm text-zinc-500">Use for hero lines and spotlight metrics.</p>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-4">
+            <p class="text-sm uppercase tracking-[0.2em] text-zinc-500">Heading · 28px / 1.3</p>
+            <p class="text-2xl font-semibold">Section titles hold 24px padding.</p>
+            <p class="text-sm text-zinc-500">Reserve for secondary page headings.</p>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-2">
+            <p class="text-sm uppercase tracking-[0.2em] text-zinc-500">Body · 16px / 1.6</p>
+            <p>
+              Soft contrast is balanced with ample line height. Default paragraphs use
+              <span class="font-semibold">text-zinc-600</span> for legibility.
+            </p>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-2">
+            <p class="text-sm uppercase tracking-[0.2em] text-zinc-500">Label · 12px / 0.2em tracking</p>
+            <p class="uppercase text-xs tracking-[0.3em] text-zinc-500">Component labels & toggles</p>
+            <p class="text-sm text-zinc-500">Keep short, in all caps, with 0.3em letter spacing.</p>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-4">
+            <p class="text-sm uppercase tracking-[0.2em] text-zinc-500">Lists · 16px body</p>
+            <ul class="space-y-2 text-zinc-600 list-disc pl-5">
+              <li>Use <code class="font-mono text-xs">space-y-2</code> between bullets.</li>
+              <li>Align markers with the text block; avoid dense stacking.</li>
+              <li>Switch to numbered lists only when order matters.</li>
+            </ul>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-4">
+            <p class="text-sm uppercase tracking-[0.2em] text-zinc-500">Numbered · sequences</p>
+            <ol class="list-decimal space-y-2 text-zinc-600 pl-6">
+              <li>Lead with verbs to keep the cadence assertive.</li>
+              <li>Cap the sequence at five steps per block for scannability.</li>
+              <li>Pair with helper copy beneath if extra detail is needed.</li>
+            </ol>
+            <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Use <code class="font-mono text-xs">pl-6</code> to clear the numeral.</p>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-4">
+            <p class="text-sm uppercase tracking-[0.2em] text-zinc-500">Checklists · task states</p>
+            <ul class="space-y-3 text-zinc-600">
+              <li class="flex items-center gap-3">
+                <span class="size-5 rounded-full bg-zinc-200 shadow-wave-button grid place-items-center text-[0.65rem] text-zinc-500">✓</span>
+                Calibrate ridge lights
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="size-5 rounded-full bg-zinc-200 shadow-wave-button grid place-items-center text-[0.65rem] text-zinc-500">✓</span>
+                Log turbine sync
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="size-5 rounded-full bg-zinc-200 shadow-wave-button grid place-items-center text-[0.65rem] text-zinc-500">○</span>
+                Stage dune beacons
+              </li>
+            </ul>
+            <p class="text-xs text-zinc-500">Swap the glyph to indicate pending vs. complete.</p>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-4">
+            <p class="text-sm uppercase tracking-[0.2em] text-zinc-500">Quote · 18px / italic</p>
+            <blockquote class="border-l-4 border-zinc-300/80 pl-6 text-lg text-zinc-600 italic">
+              "We trade harsh chrome for softened planes so the interface feels crafted." – Editorial Note
+            </blockquote>
+          </article>
+        </div>
+      </section>
+
+      <section class="space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <h2 class="text-2xl font-semibold">Accent palette</h2>
+          <p class="text-sm text-zinc-500">Tailwind core colors · OKLCH friendly</p>
+        </div>
+        <div class="grid gap-6 md:grid-cols-2">
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-4">
+            <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Main accents</p>
+            <div class="space-y-4">
+              <div class="flex items-stretch rounded-2xl bg-zinc-100 overflow-hidden">
+                <span class="w-16 bg-teal-300"></span>
+                <div class="py-4 pr-4 pl-4">
+                  <p class="text-sm font-semibold text-zinc-700">Teal</p>
+                  <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">energy · teal 300 / 600</p>
+                </div>
+              </div>
+              <div class="flex items-stretch rounded-2xl bg-zinc-100 overflow-hidden">
+                <span class="w-16 bg-rose-300"></span>
+                <div class="py-4 pr-4 pl-4">
+                  <p class="text-sm font-semibold text-zinc-700">Rose</p>
+                  <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">glow · rose 300 / 600</p>
+                </div>
+              </div>
+              <div class="flex items-stretch rounded-2xl bg-zinc-100 overflow-hidden">
+                <span class="w-16 bg-amber-300"></span>
+                <div class="py-4 pr-4 pl-4">
+                  <p class="text-sm font-semibold text-zinc-700">Amber</p>
+                  <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">warmth · amber 300 / 600</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-4">
+            <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Semantic signals</p>
+            <div class="space-y-3">
+              <div class="flex items-stretch rounded-2xl bg-zinc-100 overflow-hidden">
+                <span class="w-16 bg-rose-300"></span>
+                <div class="flex-1 py-4 pr-4 pl-4">
+                  <p class="text-sm font-semibold text-zinc-700">Waves pumping</p>
+                  <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">rose 300 / 600</p>
+                </div>
+              </div>
+              <div class="flex items-stretch rounded-2xl bg-zinc-100 overflow-hidden">
+                <span class="w-16 bg-orange-300"></span>
+                <div class="flex-1 py-4 pr-4 pl-4">
+                  <p class="text-sm font-semibold text-zinc-700">Jam & Sync</p>
+                  <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">orange 300 / 600</p>
+                </div>
+              </div>
+              <div class="flex items-stretch rounded-2xl bg-zinc-100 overflow-hidden">
+                <span class="w-16 bg-yellow-300"></span>
+                <div class="flex-1 py-4 pr-4 pl-4">
+                  <p class="text-sm font-semibold text-zinc-700">Quick Ops</p>
+                  <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">yellow 300 / 600</p>
+                </div>
+              </div>
+              <div class="flex items-stretch rounded-2xl bg-zinc-100 overflow-hidden">
+                <span class="w-16 bg-green-300"></span>
+                <div class="flex-1 py-4 pr-4 pl-4">
+                  <p class="text-sm font-semibold text-zinc-700">Deep Field</p>
+                  <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">green 300 / 600</p>
+                </div>
+              </div>
+              <div class="flex items-stretch rounded-2xl bg-zinc-100 overflow-hidden">
+                <span class="w-16 bg-teal-300"></span>
+                <div class="flex-1 py-4 pr-4 pl-4">
+                  <p class="text-sm font-semibold text-zinc-700">Recharge</p>
+                  <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">teal 300 / 600</p>
+                </div>
+              </div>
+              <div class="flex items-stretch rounded-2xl bg-zinc-100 overflow-hidden">
+                <span class="w-16 bg-fuchsia-300"></span>
+                <div class="flex-1 py-4 pr-4 pl-4">
+                  <p class="text-sm font-semibold text-zinc-700">Curiosity Queue</p>
+                  <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">fuchsia 300 / 600</p>
+                </div>
+              </div>
+              <div class="flex items-stretch rounded-2xl bg-zinc-100 overflow-hidden">
+                <span class="w-16 bg-zinc-400"></span>
+                <div class="flex-1 py-4 pr-4 pl-4">
+                  <p class="text-sm font-semibold text-zinc-700">Done & Dusted</p>
+                  <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">zinc 400 / 600</p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <h2 class="text-2xl font-semibold">Badges & alerts</h2>
+          <p class="text-sm text-zinc-500">Status chips and inline banners</p>
+        </div>
+        <div class="grid gap-6 md:grid-cols-2">
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-4">
+            <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Badges</p>
+            <div class="flex flex-wrap gap-4 text-sm text-zinc-600">
+              <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-300/60">
+                <span class="size-2.5 rounded-full bg-rose-400"></span>
+                Hot Wave
+              </span>
+              <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-300/60">
+                <span class="size-2.5 rounded-full bg-orange-400"></span>
+                Sync
+              </span>
+              <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-300/60">
+                <span class="size-2.5 rounded-full bg-yellow-300"></span>
+                Quick
+              </span>
+              <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-300/60">
+                <span class="size-2.5 rounded-full bg-green-400"></span>
+                Deep Field
+              </span>
+              <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-300/60">
+                <span class="size-2.5 rounded-full bg-teal-400"></span>
+                Recharge
+              </span>
+              <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-300/60">
+                <span class="size-2.5 rounded-full bg-fuchsia-400"></span>
+                Queue
+              </span>
+              <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-300/60">
+                <span class="size-2.5 rounded-full bg-zinc-400"></span>
+                Done
+              </span>
+            </div>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-4">
+            <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Alert banners</p>
+            <div class="space-y-3 text-sm text-zinc-600">
+              <div class="rounded-[1.5rem] border border-zinc-300/60 px-5 py-3 flex items-center gap-3">
+                <span class="size-2.5 rounded-full bg-rose-400"></span>
+                <div class="flex-1">
+                  <strong class="block text-zinc-700">Wave pressure high</strong>
+                  Stabilize turbines to avoid clipping.
+                </div>
+                <button class="bg-transparent text-xs uppercase tracking-[0.3em] text-zinc-500">Details</button>
+              </div>
+              <div class="rounded-[1.5rem] border border-zinc-300/60 px-5 py-3 flex items-center gap-3">
+                <span class="size-2.5 rounded-full bg-amber-300"></span>
+                <div class="flex-1">
+                  <strong class="block text-zinc-700">Ops in progress</strong>
+                  Quick actions may run slower for a minute.
+                </div>
+                <button class="bg-transparent text-xs uppercase tracking-[0.3em] text-zinc-500">Dismiss</button>
+              </div>
+              <div class="rounded-[1.5rem] border border-zinc-300/60 px-5 py-3 flex items-center gap-3">
+                <span class="size-2.5 rounded-full bg-teal-400"></span>
+                <div class="flex-1">
+                  <strong class="block text-zinc-700">Recharge complete</strong>
+                  Systems ready for the next modulation.
+                </div>
+                <button class="bg-transparent text-xs uppercase tracking-[0.3em] text-zinc-500">Close</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-semibold">Layout, spacing & grids</h2>
+          <span class="text-sm text-zinc-500">Guides for whitespace harmony</span>
+        </div>
+        <div class="grid gap-6 lg:grid-cols-3">
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-6">
+            <header class="space-y-1">
+              <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">12-column grid</p>
+              <p class="font-semibold">Fluid container</p>
+            </header>
+            <div class="grid grid-cols-12 gap-2">
+              <span class="h-12 rounded-xl bg-zinc-100 col-span-3"></span>
+              <span class="h-12 rounded-xl bg-zinc-100 col-span-3"></span>
+              <span class="h-12 rounded-xl bg-zinc-100 col-span-3"></span>
+              <span class="h-12 rounded-xl bg-zinc-100 col-span-3"></span>
+              <span class="h-12 rounded-xl bg-zinc-100 col-span-4"></span>
+              <span class="h-12 rounded-xl bg-zinc-100 col-span-4"></span>
+              <span class="h-12 rounded-xl bg-zinc-100 col-span-4"></span>
+            </div>
+            <p class="text-sm text-zinc-500">
+              Use <code class="font-mono text-xs">max-w-6xl</code> and responsive column spans for balanced breathing room.
+            </p>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-6">
+            <header class="space-y-1">
+              <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Spacing scale</p>
+              <p class="font-semibold">4, 8, 16, 24, 32</p>
+            </header>
+            <div class="space-y-3">
+              <div class="flex items-center gap-4">
+                <span class="w-16 h-2 rounded-full bg-zinc-100"></span>
+                <p class="text-sm text-zinc-500">xs · 0.5rem</p>
+              </div>
+              <div class="flex items-center gap-4">
+                <span class="w-24 h-2 rounded-full bg-zinc-100"></span>
+                <p class="text-sm text-zinc-500">sm · 1rem</p>
+              </div>
+              <div class="flex items-center gap-4">
+                <span class="w-32 h-2 rounded-full bg-zinc-100"></span>
+                <p class="text-sm text-zinc-500">md · 1.5rem</p>
+              </div>
+              <div class="flex items-center gap-4">
+                <span class="w-40 h-2 rounded-full bg-zinc-100"></span>
+                <p class="text-sm text-zinc-500">lg · 2rem</p>
+              </div>
+            </div>
+            <p class="text-sm text-zinc-500">Stack cards with <code class="font-mono text-xs">space-y-6</code> or larger to maintain the calm tone.</p>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-6">
+            <header class="space-y-1">
+              <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Breakpoints</p>
+              <p class="font-semibold">sm · md · lg · xl</p>
+            </header>
+            <div class="grid gap-3">
+              <div class="rounded-2xl bg-zinc-100 px-4 py-3 flex items-center justify-between">
+                <span class="text-sm font-semibold">sm</span>
+                <span class="text-xs text-zinc-500">≥ 640px</span>
+              </div>
+              <div class="rounded-2xl bg-zinc-100 px-4 py-3 flex items-center justify-between">
+                <span class="text-sm font-semibold">md</span>
+                <span class="text-xs text-zinc-500">≥ 768px</span>
+              </div>
+              <div class="rounded-2xl bg-zinc-100 px-4 py-3 flex items-center justify-between">
+                <span class="text-sm font-semibold">lg</span>
+                <span class="text-xs text-zinc-500">≥ 1024px</span>
+              </div>
+              <div class="rounded-2xl bg-zinc-100 px-4 py-3 flex items-center justify-between">
+                <span class="text-sm font-semibold">xl</span>
+                <span class="text-xs text-zinc-500">≥ 1280px</span>
+              </div>
+            </div>
+            <p class="text-sm text-zinc-500">Scale to 2-column layouts at <code class="font-mono text-xs">md</code> and stack for smaller screens.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <h2 class="text-2xl font-semibold">Card elevations</h2>
+          <p class="text-sm text-zinc-500">Raised · Flat · Embossed</p>
+        </div>
+        <div class="grid gap-6 md:grid-cols-3">
+          <article class="rounded-[1.8rem] bg-zinc-200 shadow-wave-well p-8 space-y-3">
+            <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Raised</p>
+            <p class="font-semibold">Default interaction panel</p>
+            <p class="text-sm text-zinc-500">
+              Use <code class="font-mono text-xs">shadow-wave-well</code> to keep buttons and sliders floating on the base slab.
+            </p>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-3">
+            <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Flat</p>
+            <p class="font-semibold">Subtle dividers</p>
+            <p class="text-sm text-zinc-500">
+              Ideal for long-form content and tables—switch shadows for a 1px border to reduce emphasis.
+            </p>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 shadow-wave-embossed p-8 space-y-3">
+            <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Embossed</p>
+            <p class="font-semibold">Input wells & key stats</p>
+            <p class="text-sm text-zinc-500">
+              Apply <code class="font-mono text-xs">shadow-wave-embossed</code> when the surface should look carved in, such as meters or inset cards.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <h2 class="text-2xl font-semibold">Divider component</h2>
+          <p class="text-sm text-zinc-500">Flat · subtle</p>
+        </div>
+        <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-4">
+          <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Usage</p>
+          <p class="text-sm text-zinc-600">
+            Dividers keep sections readable without sacrificing whitespace. Mirror the flat card border with <code class="font-mono text-xs">border-zinc-300/60</code> on a single-pixel line that spans the container.
+          </p>
+          <div class="space-y-4">
+            <div class="flex items-center gap-4 text-sm text-zinc-500">
+              <span class="flex-1 border-t border-zinc-300/60"></span>
+              <span>Default divider</span>
+            </div>
+            <div class="flex items-center gap-4 text-sm text-zinc-500">
+              <span class="flex-1 border-t border-dashed border-zinc-300/60"></span>
+              <span>Dashed variant</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <h2 class="text-2xl font-semibold">Core components</h2>
+          <p class="text-sm text-zinc-500 max-w-md">
+            Buttons, toggles, and gauges inherit the shared background color, while shadows create elevation and pressed states.
+          </p>
+        </div>
+        <div class="grid gap-8 lg:grid-cols-2">
+          <div class="rounded-[2.4rem] bg-zinc-200 shadow-wave-panel p-10 space-y-8">
+            <div class="space-y-4">
+              <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Wave Artisans Console</p>
+              <div class="flex flex-wrap gap-6">
+                <button class="neo-btn flex flex-col items-center gap-2.5 rounded-[1.5rem] bg-zinc-200 px-10 py-8 text-xs tracking-[0.35em] uppercase text-zinc-600 shadow-wave-button">
+                  <span class="text-3xl">⌀</span>
+                  Size
+                </button>
+                <button class="neo-btn flex flex-col items-center gap-2.5 rounded-[1.5rem] bg-zinc-200 px-10 py-8 text-xs tracking-[0.35em] uppercase text-zinc-600 shadow-wave-button">
+                  <span class="text-3xl">✦</span>
+                  Sparkle
+                </button>
+                <button class="neo-btn flex flex-col items-center gap-2.5 rounded-[1.5rem] bg-zinc-200 px-10 py-8 text-xs tracking-[0.35em] uppercase text-zinc-600 shadow-wave-button">
+                  <span class="text-3xl">↔</span>
+                  Width
+                </button>
+                <button class="neo-btn flex flex-col items-center gap-2.5 rounded-[1.5rem] bg-zinc-200 px-10 py-8 text-xs tracking-[0.35em] uppercase text-zinc-600 shadow-wave-button">
+                  <span class="text-3xl">☼</span>
+                  Glow
+                </button>
+              </div>
+            </div>
+            <div class="rounded-[1.9rem] bg-zinc-200 shadow-wave-well p-6 flex flex-col lg:flex-row gap-8">
+              <div class="flex-1 rounded-[1.7rem] bg-zinc-200 shadow-wave-inset p-6 flex flex-col justify-between">
+                <span class="text-xs uppercase tracking-[0.3em] text-zinc-500">Output</span>
+                <strong class="text-4xl tracking-[0.4em] font-semibold text-zinc-700">72%</strong>
+                <label class="mt-4 space-y-3 text-sm text-zinc-500">
+                  <span class="uppercase tracking-[0.2em] text-zinc-500">Intensity</span>
+                  <input type="range" value="72" class="wave-slider" />
+                </label>
+              </div>
+              <div class="flex justify-center items-center">
+                <div class="relative grid place-items-center rounded-full bg-zinc-200 shadow-wave-knob size-40">
+                  <div class="rounded-full bg-gradient-to-br from-zinc-50 to-zinc-200 size-24 shadow-wave-knob-core"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-8">
+            <article class="rounded-[1.8rem] bg-zinc-200 shadow-wave-well p-8 space-y-6">
+              <header class="flex items-center justify-between">
+                <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Buttons</p>
+                <span class="text-xs text-zinc-500">States & variants</span>
+              </header>
+              <p class="text-sm text-zinc-500">
+                Icon-first controls keep the block radius, while single-line actions stretch into pill silhouettes for a softer flow.
+              </p>
+              <div class="space-y-4">
+                <div class="flex flex-wrap gap-4">
+                  <button class="neo-btn rounded-full bg-zinc-200 px-12 py-4 uppercase text-xs tracking-[0.3em] text-zinc-600 shadow-wave-button">
+                    Primary
+                  </button>
+                  <button class="neo-btn rounded-full bg-zinc-200 px-12 py-4 uppercase text-xs tracking-[0.3em] text-zinc-500 shadow-wave-button">
+                    Secondary
+                  </button>
+                  <button class="neo-btn rounded-full bg-zinc-200 px-12 py-4 uppercase text-xs tracking-[0.3em] text-zinc-400 shadow-wave-button">
+                    Ghost
+                  </button>
+                </div>
+                <div class="grid gap-3 sm:grid-cols-3">
+                  <div class="rounded-2xl bg-zinc-100 px-4 py-3 text-center">
+                    <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Resting</p>
+                    <p class="text-sm text-zinc-600">Shadow offset 12px</p>
+                  </div>
+                  <div class="rounded-2xl bg-zinc-100 px-4 py-3 text-center">
+                    <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Hover</p>
+                    <p class="text-sm text-zinc-600">Raise 2px, deepen blur</p>
+                  </div>
+                  <div class="rounded-2xl bg-zinc-100 px-4 py-3 text-center">
+                    <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Pressed</p>
+                    <p class="text-sm text-zinc-600">Switch to inset twin shadow</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+            <article class="rounded-[1.8rem] bg-zinc-200 shadow-wave-well p-8 space-y-6">
+              <header class="flex items-center justify-between">
+                <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Input & toggles</p>
+                <span class="text-xs text-zinc-500">Minimal chrome</span>
+              </header>
+              <div class="space-y-4">
+                <label class="flex items-center justify-between gap-4">
+                  <span class="text-sm text-zinc-500">Wave mode</span>
+                  <div class="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-zinc-500">
+                    <span class="text-zinc-400">Off</span>
+                    <input type="checkbox" class="wave-toggle" aria-label="Wave mode" checked />
+                    <span class="text-zinc-600">On</span>
+                  </div>
+                </label>
+                <label class="flex items-center justify-between gap-4">
+                  <span class="text-sm text-zinc-500">Focus alerts</span>
+                  <div class="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-zinc-500">
+                    <span class="text-zinc-600">Off</span>
+                    <input type="checkbox" class="wave-toggle" aria-label="Focus alerts" />
+                    <span class="text-zinc-400">On</span>
+                  </div>
+                </label>
+                <label class="flex items-center justify-between gap-4">
+                  <span class="text-sm text-zinc-500">Depth</span>
+                  <div class="flex items-center gap-3">
+                    <span class="text-xs text-zinc-500">12px</span>
+                    <input type="range" value="60" class="wave-slider w-52" />
+                  </div>
+                </label>
+                <div class="grid sm:grid-cols-3 gap-4">
+                  <div class="rounded-2xl bg-zinc-100 px-4 py-3 text-center">
+                    <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Neutral</p>
+                    <p class="text-sm text-zinc-600">Shadow pair 94° / 274°</p>
+                  </div>
+                  <div class="rounded-2xl bg-zinc-100 px-4 py-3 text-center">
+                    <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Elevated</p>
+                    <p class="text-sm text-zinc-600">Increase blur by 4px</p>
+                  </div>
+                  <div class="rounded-2xl bg-zinc-100 px-4 py-3 text-center">
+                    <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Inset</p>
+                    <p class="text-sm text-zinc-600">Flip to inset for pressed</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <h2 class="text-2xl font-semibold">Table components</h2>
+          <p class="text-sm text-zinc-500">Minimal grid, ample whitespace</p>
+        </div>
+        <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-6">
+          <header class="space-y-1">
+            <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Raised data view</p>
+            <p class="font-semibold">Wave log</p>
+          </header>
+          <div class="overflow-x-auto rounded-[1.5rem] bg-zinc-200 shadow-wave-panel">
+            <table class="min-w-full border-collapse text-sm text-zinc-600">
+              <thead class="text-xs uppercase tracking-[0.25em] text-zinc-500">
+                <tr>
+                  <th class="text-left px-8 py-4">Preset</th>
+                  <th class="text-left px-8 py-4">Depth</th>
+                  <th class="text-left px-8 py-4">Tempo</th>
+                  <th class="text-left px-8 py-4">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="border-t border-zinc-300/60">
+                  <td class="px-8 py-4">Glass currents</td>
+                  <td class="px-8 py-4">12px</td>
+                  <td class="px-8 py-4">72 bpm</td>
+                  <td class="px-8 py-4 text-zinc-500">Idle</td>
+                </tr>
+                <tr class="border-t border-zinc-300/60">
+                  <td class="px-8 py-4">Mist bloom</td>
+                  <td class="px-8 py-4">18px</td>
+                  <td class="px-8 py-4">96 bpm</td>
+                  <td class="px-8 py-4 text-zinc-600">Active</td>
+                </tr>
+                <tr class="border-t border-zinc-300/60">
+                  <td class="px-8 py-4">Orchid tide</td>
+                  <td class="px-8 py-4">10px</td>
+                  <td class="px-8 py-4">64 bpm</td>
+                  <td class="px-8 py-4 text-zinc-500">Idle</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-3 text-sm text-zinc-500">
+            <div class="rounded-2xl border border-zinc-300/60 px-4 py-3">
+              <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Padding</p>
+              <p>px-8 · py-4</p>
+            </div>
+            <div class="rounded-2xl border border-zinc-300/60 px-4 py-3">
+              <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Rows</p>
+              <p>border-zinc-300/60</p>
+            </div>
+            <div class="rounded-2xl border border-zinc-300/60 px-4 py-3">
+              <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Header</p>
+              <p>uppercase, tracking 0.25em</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <h2 class="text-2xl font-semibold">Image treatments</h2>
+          <p class="text-sm text-zinc-500">Flat & raised, labeled or bare</p>
+        </div>
+        <div class="grid gap-6 md:grid-cols-2">
+          <figure class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 overflow-hidden">
+            <img src="images/sample.JPG" alt="Glass art detail" class="w-full h-full object-cover" />
+          </figure>
+          <figure class="rounded-[1.8rem] bg-zinc-200 shadow-wave-well overflow-hidden">
+            <img src="images/sample.JPG" alt="Glass art detail" class="w-full h-full object-cover" />
+          </figure>
+          <figure class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 pt-0 px-0 pb-6 space-y-2 overflow-hidden">
+            <img src="images/sample.JPG" alt="Glass art detail" class="w-full rounded-t-[1.5rem] object-cover aspect-[4/3]" />
+            <figcaption class="px-6 pt-3 text-xs uppercase tracking-[0.3em] text-zinc-500">Flat · with label</figcaption>
+          </figure>
+          <figure class="rounded-[1.8rem] bg-zinc-200 shadow-wave-well pt-0 px-0 pb-6 space-y-2 overflow-hidden">
+            <img src="images/sample.JPG" alt="Glass art detail" class="w-full rounded-t-[1.5rem] object-cover aspect-[4/3]" />
+            <figcaption class="px-6 pt-3 text-xs uppercase tracking-[0.3em] text-zinc-500">Raised · with label</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <h2 class="text-2xl font-semibold">Utility components</h2>
+          <p class="text-sm text-zinc-500">Buttons group, sonner, spinner, skeleton, menus, scroll area</p>
+        </div>
+        <div class="grid gap-6 lg:grid-cols-2">
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-4">
+            <header class="space-y-1">
+              <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Buttons group</p>
+              <p class="font-semibold">Segmented actions</p>
+            </header>
+            <div class="rounded-full bg-zinc-200 border border-zinc-300/60 p-1 flex flex-wrap gap-2">
+              <button class="neo-btn rounded-full bg-zinc-200 px-5 py-2 text-xs uppercase tracking-[0.3em] text-zinc-600 shadow-wave-button">Flow</button>
+              <button class="neo-btn rounded-full bg-zinc-200 px-5 py-2 text-xs uppercase tracking-[0.3em] text-zinc-500 shadow-wave-button">Pulse</button>
+              <button class="neo-btn rounded-full bg-zinc-200 px-5 py-2 text-xs uppercase tracking-[0.3em] text-zinc-500 shadow-wave-button">Glint</button>
+            </div>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 shadow-wave-well p-8 space-y-4">
+            <header class="space-y-1">
+              <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Sonner</p>
+              <p class="font-semibold">Toast notification</p>
+            </header>
+            <div class="rounded-[1.6rem] bg-zinc-200 shadow-wave-panel px-6 py-4 flex items-center gap-4">
+              <div class="size-3 rounded-full bg-emerald-400"></div>
+              <div class="flex-1">
+                <p class="text-sm font-semibold text-zinc-600">Profile saved</p>
+                <p class="text-xs text-zinc-500">Synced to Wave Cloud 2 seconds ago.</p>
+              </div>
+              <button class="bg-transparent text-xs uppercase tracking-[0.3em] text-zinc-500">Undo</button>
+            </div>
+            <p class="text-xs text-zinc-500">Anchor to top-right, auto-dismiss after 4s.</p>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-4">
+            <header class="space-y-1">
+              <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Spinner & skeleton</p>
+              <p class="font-semibold">Loading indicators</p>
+            </header>
+            <div class="flex flex-wrap gap-6 items-center">
+              <div class="wave-spinner"></div>
+              <div class="flex-1 space-y-3">
+                <div class="wave-skeleton h-4"></div>
+                <div class="wave-skeleton h-4 w-11/12"></div>
+                <div class="wave-skeleton h-4 w-2/3"></div>
+              </div>
+            </div>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-4">
+            <header class="space-y-1">
+              <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Menus</p>
+              <p class="font-semibold">Minimal flyout</p>
+            </header>
+            <div class="rounded-[1.5rem] bg-zinc-200 border border-zinc-300/60 divide-y divide-zinc-300/60 overflow-hidden">
+              <button class="bg-transparent w-full text-left px-6 py-3 text-sm text-zinc-600 hover:bg-zinc-100">Duplicate layer</button>
+              <button class="bg-transparent w-full text-left px-6 py-3 text-sm text-zinc-600 hover:bg-zinc-100">Rename</button>
+              <button class="bg-transparent w-full text-left px-6 py-3 text-sm text-zinc-500/80 hover:bg-zinc-100">Archive</button>
+            </div>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 shadow-wave-well p-8 space-y-4">
+            <header class="space-y-1">
+              <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Scroll area</p>
+              <p class="font-semibold">Soft rails</p>
+            </header>
+            <div class="rounded-[1.5rem] bg-zinc-200 shadow-wave-inset p-4 max-h-60 overflow-y-auto space-y-3 text-sm text-zinc-600">
+              <p>Layer 01 · Mist bloom · synced</p>
+              <p>Layer 02 · Coral hush · synced</p>
+              <p>Layer 03 · Quartz arc · syncing</p>
+              <p>Layer 04 · Sun drift · queued</p>
+              <p>Layer 05 · Night reef · synced</p>
+              <p>Layer 06 · Foam hush · synced</p>
+              <p>Layer 07 · Silver dune · synced</p>
+              <p>Layer 08 · Prism vent · syncing</p>
+            </div>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-4">
+            <header class="space-y-1">
+              <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Skeleton card</p>
+              <p class="font-semibold">Flat placeholder</p>
+            </header>
+            <div class="space-y-3">
+              <div class="wave-skeleton h-40 rounded-[1.5rem]"></div>
+              <div class="wave-skeleton h-4 w-3/4"></div>
+              <div class="wave-skeleton h-4 w-1/2"></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <h2 class="text-2xl font-semibold">Form components</h2>
+          <p class="text-sm text-zinc-500">Embossed fields with gentle focus cues</p>
+        </div>
+        <div class="grid gap-8 lg:grid-cols-2">
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-6">
+            <header class="space-y-1">
+              <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Text inputs</p>
+              <p class="font-semibold">Stacked fields</p>
+            </header>
+            <form class="space-y-5">
+              <label class="block space-y-2">
+                <span class="text-xs uppercase tracking-[0.25em] text-zinc-500">Name</span>
+                <input
+                  type="text"
+                  placeholder="Lena Dune"
+                  class="w-full rounded-2xl bg-zinc-200 px-4 py-3 text-zinc-700 placeholder:text-zinc-400 input-embossed focus:outline-none transition"
+                />
+              </label>
+              <label class="block space-y-2">
+                <span class="text-xs uppercase tracking-[0.25em] text-zinc-500">Email</span>
+                <input
+                  type="email"
+                  placeholder="wave@atelier.studio"
+                  class="w-full rounded-2xl bg-zinc-200 px-4 py-3 text-zinc-700 placeholder:text-zinc-400 input-embossed focus:outline-none transition"
+                />
+              </label>
+              <label class="block space-y-2">
+                <span class="text-xs uppercase tracking-[0.25em] text-zinc-500">Notes</span>
+                <textarea
+                  rows="4"
+                  placeholder="Describe the modulation pattern"
+                  class="w-full rounded-3xl bg-zinc-200 px-4 py-3 text-zinc-700 placeholder:text-zinc-400 input-embossed focus:outline-none transition resize-none"
+                ></textarea>
+              </label>
+            </form>
+          </article>
+          <article class="rounded-[1.8rem] bg-zinc-200 border border-zinc-300/60 p-8 space-y-6">
+            <header class="space-y-1">
+              <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Dropdowns & states</p>
+              <p class="font-semibold">Variant palette</p>
+            </header>
+            <div class="space-y-5">
+              <label class="block space-y-2">
+                <span class="text-xs uppercase tracking-[0.25em] text-zinc-500">Mode</span>
+                <div class="relative">
+                  <select class="w-full appearance-none rounded-2xl bg-zinc-200 px-4 py-3 text-zinc-700 shadow-wave-button pr-12 focus:outline-none">
+                    <option>Still water</option>
+                    <option>Ripple</option>
+                    <option>Surge</option>
+                  </select>
+                  <span class="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-zinc-500">▾</span>
+                </div>
+              </label>
+              <div class="grid sm:grid-cols-3 gap-3 text-sm text-zinc-600">
+                <div class="rounded-2xl border border-zinc-300/60 px-4 py-3 space-y-1">
+                  <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Default input</p>
+                  <p>input-embossed inset</p>
+                </div>
+                <div class="rounded-2xl border border-zinc-500 px-4 py-3 space-y-1">
+                  <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Focus input</p>
+                  <p>deepen inset</p>
+                </div>
+                <div class="rounded-2xl border border-zinc-300/60 px-4 py-3 space-y-1">
+                  <p class="text-xs uppercase tracking-[0.3em] text-zinc-500">Raised select</p>
+                  <p>shadow-wave-button</p>
+                </div>
+              </div>
+              <label class="block space-y-2">
+                <span class="text-xs uppercase tracking-[0.25em] text-zinc-500">Disabled example</span>
+                <input
+                  type="text"
+                  disabled
+                  value="Auto-generated"
+                  class="w-full rounded-2xl bg-zinc-200 px-4 py-3 text-zinc-500/70 input-embossed opacity-60 cursor-not-allowed"
+                />
+              </label>
+              <fieldset class="space-y-3">
+                <legend class="text-xs uppercase tracking-[0.25em] text-zinc-500">Checkboxes</legend>
+                <label class="flex items-center gap-3 text-sm text-zinc-600">
+                  <input type="checkbox" class="size-5 rounded-lg border border-zinc-300/60 bg-zinc-200 shadow-wave-button accent-zinc-500" checked />
+                  Enable mist shimmer
+                </label>
+                <label class="flex items-center gap-3 text-sm text-zinc-600">
+                  <input type="checkbox" class="size-5 rounded-lg border border-zinc-300/60 bg-zinc-200 shadow-wave-button accent-zinc-500" />
+                  Allow manual override
+                </label>
+                <label class="flex items-center gap-3 text-sm text-zinc-500/70">
+                  <input type="checkbox" disabled class="size-5 rounded-lg border border-dashed border-zinc-300/60 bg-zinc-200 opacity-60" />
+                  Locked during sync
+                </label>
+              </fieldset>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,18 +1,43 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Nunito_Sans } from "next/font/google";
 import React from "react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { cn } from "@/lib/utils";
 
-const inter = Inter({
+const nunito = Nunito_Sans({
   subsets: ["latin"],
   preload: true,
+  weight: ["400", "600", "700"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Agent Chat",
-  description: "Agent Chat UX by LangChain",
+  title: "Wave Artisans Console",
+  description: "A LangGraph-ready chat console restyled with the Wave Artisans UI kit.",
+  metadataBase: new URL("https://agentchat.vercel.app"),
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png" },
+    ],
+  },
+  openGraph: {
+    title: "Wave Artisans Console",
+    description:
+      "Chat with LangGraph agents inside a SoftUI-inspired console built with Tailwind 4.",
+    images: ["/opengraph-image.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Wave Artisans Console",
+    description:
+      "A neumorphic control room for LangGraph powered assistants.",
+    images: ["/twitter-image.png"],
+  },
 };
 
 export default function RootLayout({
@@ -22,7 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={cn("bg-zinc-200 text-zinc-800", nunito.className)}>
         <NuqsAdapter>{children}</NuqsAdapter>
       </body>
     </html>

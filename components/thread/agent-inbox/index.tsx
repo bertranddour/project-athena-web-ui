@@ -81,8 +81,8 @@ export function ThreadView({ interrupt }: ThreadViewProps) {
                     className={cn(
                       "rounded-full border px-3 py-1 text-sm transition-colors",
                       idx === activeInterruptIndex
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "hover:border-primary hover:text-primary border-gray-300 bg-white text-gray-600",
+                        ? "border-teal-400 bg-teal-50 text-teal-600"
+                        : "border-zinc-300 bg-white text-zinc-600 hover:border-teal-300 hover:text-teal-600",
                     )}
                   >
                     {title}
