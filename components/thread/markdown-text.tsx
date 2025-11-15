@@ -121,7 +121,7 @@ const defaultComponents: any = {
   a: ({ className, ...props }: { className?: string }) => (
     <a
       className={cn(
-        "text-teal-600 font-semibold underline underline-offset-4",
+        "text-teal-400 font-semibold underline underline-offset-4",
         className,
       )}
       {...props}

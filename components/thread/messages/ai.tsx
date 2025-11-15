@@ -160,7 +160,7 @@ export function AssistantMessage({
         ) : (
           <>
             {contentString.length > 0 && (
-              <div className="rounded-[1.5rem] border border-zinc-300/60 bg-white/80 px-5 py-4 text-sm text-zinc-700 shadow-wave-panel">
+              <div className="rounded-[1.8rem] border border-zinc-300/60 bg-zinc-200 px-6 py-4 text-sm leading-relaxed text-zinc-700">
                 <MarkdownText>{contentString}</MarkdownText>
               </div>
             )}

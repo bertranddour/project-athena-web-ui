@@ -20,13 +20,6 @@ import ThreadHistory from "./history";
 import { toast } from "sonner";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
-import { GitHubSVG } from "../icons/github";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { ContentBlocksPreview } from "./ContentBlocksPreview";
 import {
@@ -71,31 +64,6 @@ function ScrollToBottom(props: { className?: string }) {
       <ArrowDown className="h-4 w-4" />
       <span>Scroll to bottom</span>
     </Button>
-  );
-}
-
-function OpenGitHubRepo() {
-  return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <a
-            href="https://github.com/langchain-ai/agent-chat-ui"
-            target="_blank"
-            rel="noreferrer"
-            className="neo-btn inline-flex size-10 items-center justify-center rounded-full border border-zinc-300/60 bg-zinc-200 shadow-wave-button"
-          >
-            <GitHubSVG
-              width="24"
-              height="24"
-            />
-          </a>
-        </TooltipTrigger>
-        <TooltipContent side="left">
-          <p>Open GitHub repo</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
   );
 }
 
@@ -297,10 +265,6 @@ export function Thread() {
                   <span>Thread</span>
                   <span>{threadId ? threadId.slice(0, 8) : "new"}</span>
                 </div>
-                <div className="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-zinc-500">
-                  <span>Repo</span>
-                  <OpenGitHubRepo />
-                </div>
               </div>
             </div>
 
@@ -398,28 +362,17 @@ export function Thread() {
                 </div>
               )}
             </div>
-            <div className="space-y-4 rounded-[1.8rem] border border-zinc-300/60 bg-zinc-200 p-6">
-              <div className="flex flex-wrap items-center gap-3">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
-                    Compose message
-                  </p>
-                  <p className="text-sm text-zinc-600">
-                    Drop files or type to continue the run.
-                  </p>
-                </div>
-              </div>
-              <div
-                ref={dropRef}
-                className={cn(
-                  "relative w-full rounded-[1.8rem] border border-dashed border-zinc-300/70 bg-zinc-200/80 p-4 shadow-wave-embossed transition-all",
-                  dragOver && "border-teal-300 bg-zinc-100",
-                )}
-              >
-                <form
-                  onSubmit={handleSubmit}
-                  className="space-y-4"
-                >
+            <div
+              ref={dropRef}
+              className={cn(
+                "space-y-4",
+                dragOver && "rounded-[1.5rem] ring-2 ring-teal-200",
+              )}
+            >
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-4"
+            >
                   <ContentBlocksPreview
                     blocks={contentBlocks}
                     onRemove={removeBlock}
@@ -445,11 +398,11 @@ export function Thread() {
                     className="input-embossed min-h-28 w-full rounded-[1.5rem] border-none bg-transparent px-4 py-3 text-sm text-zinc-700 placeholder:text-zinc-500 focus-visible:outline-none"
                   />
 
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-600">
-                    <Label
-                      htmlFor="file-input"
-                      className="flex cursor-pointer items-center gap-2"
-                    >
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-600">
+                      <Label
+                        htmlFor="file-input"
+                        className="flex cursor-pointer items-center gap-2"
+                      >
                       <Plus className="size-4 text-zinc-500" />
                       Attach PDF or image
                     </Label>
@@ -480,11 +433,10 @@ export function Thread() {
                         >
                           Send
                         </Button>
-                      )}
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </form>
-              </div>
+            </form>
             </div>
           </div>
         </div>
