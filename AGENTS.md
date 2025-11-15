@@ -1,9 +1,8 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
-- `src/app` hosts Next.js App Router routes, server actions, and layouts. Group related flows inside route folders (e.g., `src/app/(dashboard)`) and keep page metadata in the nearest `layout.tsx`.
-- `src/components` contains reusable UI primitives (`components/ui`), chat widgets (`components/thread`), and icon wrappers; co-locate component-specific styles with the component file.
-- `src/hooks`, `src/lib`, and `src/providers` centralize shared utilities and context wrappers—import from these modules before duplicating logic in routes.
+- `app` hosts Next.js App Router routes, server actions, and layouts. Group related flows inside route folders (e.g., `app/(dashboard)`) and keep page metadata in the nearest `layout.tsx`.
+- `components` contains reusable UI primitives (`components/ui`), chat widgets (`components/thread`), and icon wrappers; co-locate component-specific styles with the component file.
+- `hooks`, `lib`, and `providers` centralize shared utilities and context wrappers—import from these modules before duplicating logic in routes.
 - Static assets (logos, fonts, manifest) live under `public/`.
 
 ## Build, Test, and Development Commands
@@ -15,8 +14,8 @@
 
 ## Coding Style & Naming Conventions
 - TypeScript everywhere; prefer explicit return types for hooks and server actions, and justify any `any` usage in a code comment.
-- Shared hooks live in `src/hooks/use-*.ts`. Components are PascalCase, files use kebab-case (`password-input.tsx`) unless exporting a layout.
-- Use Tailwind utility classes and the shared `cn` helper instead of bespoke CSS, and break complex JSX into focused components under `src/components`.
+- Shared hooks live in `hooks/use-*.ts`. Components are PascalCase, files use kebab-case (`password-input.tsx`) unless exporting a layout.
+- Use Tailwind utility classes and the shared `cn` helper instead of bespoke CSS, and break complex JSX into focused components under `components`.
 
 ## Testing Guidelines
 - No automated runner ships with the repo yet; include manual QA notes in every PR and, when practical, add React Testing Library specs alongside the component (`component-name.test.tsx`).

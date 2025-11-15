@@ -87,12 +87,26 @@ export default function ThreadHistory() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    let cancelled = false;
     setThreadsLoading(true);
     getThreads()
-      .then(setThreads)
-      .catch(console.error)
-      .finally(() => setThreadsLoading(false));
-  }, []);
+      .then((fetchedThreads) => {
+        if (cancelled) return;
+        setThreads(fetchedThreads);
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        console.error(error);
+      })
+      .finally(() => {
+        if (cancelled) return;
+        setThreadsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [getThreads, setThreads, setThreadsLoading]);
 
   return (
     <>
