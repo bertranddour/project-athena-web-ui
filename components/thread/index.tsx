@@ -57,12 +57,16 @@ function ScrollToBottom(props: { className?: string }) {
   if (isAtBottom) return null;
   return (
     <Button
-      variant="outline"
-      className={props.className}
+      variant="ghost"
+      size="icon"
+      className={cn(
+        "size-12 rounded-full border border-zinc-300/60 bg-white/80 shadow-wave-button",
+        props.className,
+      )}
       onClick={() => scrollToBottom()}
     >
-      <ArrowDown className="h-4 w-4" />
-      <span>Scroll to bottom</span>
+      <ArrowDown className="h-5 w-5 text-amber-400" />
+      <span className="sr-only">Scroll to bottom</span>
     </Button>
   );
 }
@@ -221,13 +225,6 @@ export function Thread() {
           <p className="text-xs uppercase tracking-[0.4em] text-zinc-500">
             Wave Artisans Console
           </p>
-          <h1 className="text-4xl font-semibold tracking-tight">
-            LangGraph Operator Desk
-          </h1>
-          <p className="mx-auto max-w-2xl text-base leading-relaxed text-zinc-600">
-            Explore LangGraph runs, audit interrupts, and craft follow-ups in a
-            SoftUI-inspired workspace built entirely with Tailwind 4.x.
-          </p>
         </header>
 
         <div className="grid gap-8 lg:grid-cols-[320px,1fr]">
@@ -280,7 +277,7 @@ export function Thread() {
                   : "",
               )}
             >
-              <div className="rounded-[1.8rem] border border-zinc-300/60 bg-zinc-200 shadow-wave-embossed">
+              <div className="rounded-[1.8rem] bg-zinc-200 shadow-wave-embossed">
                 <div className="flex flex-col gap-1 border-b border-zinc-300/60 px-6 py-4">
                   <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
                     Conversation
@@ -340,7 +337,7 @@ export function Thread() {
                   />
                   <div className="pointer-events-none absolute bottom-6 right-6">
                     <div className="pointer-events-auto">
-                      <ScrollToBottom className="neo-btn rounded-full border border-zinc-300/60 bg-zinc-200 px-6 py-2 text-[0.6rem]" />
+                      <ScrollToBottom />
                     </div>
                   </div>
                 </StickToBottom>
@@ -430,10 +427,11 @@ export function Thread() {
                           disabled={
                             isLoading || (!input.trim() && contentBlocks.length === 0)
                           }
+                          className="text-teal-400 disabled:text-zinc-400"
                         >
                           Send
                         </Button>
-                        )}
+                      )}
                       </div>
                     </div>
             </form>
