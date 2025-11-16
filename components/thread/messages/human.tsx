@@ -1,5 +1,5 @@
 import { useStreamContext } from "@/providers/Stream";
-import { Message } from "@langchain/langgraph-sdk";
+import { Message } from "@/lib/api-client";
 import { useState } from "react";
 import { getContentString } from "../utils";
 import { cn } from "@/lib/utils";
@@ -42,8 +42,8 @@ export function HumanMessage({
   isLoading: boolean;
 }) {
   const thread = useStreamContext();
-  const meta = thread.getMessagesMetadata(message);
-  const parentCheckpoint = meta?.firstSeenState?.parent_checkpoint;
+  // Note: getMessagesMetadata not yet implemented in custom useStream hook
+  const meta = undefined;
 
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState("");
@@ -51,26 +51,8 @@ export function HumanMessage({
 
   const handleSubmitEdit = () => {
     setIsEditing(false);
-
-    const newMessage: Message = { type: "human", content: value };
-    thread.submit(
-      { messages: [newMessage] },
-      {
-        checkpoint: parentCheckpoint,
-        streamMode: ["values"],
-        streamSubgraphs: true,
-        streamResumable: true,
-        optimisticValues: (prev) => {
-          const values = meta?.firstSeenState?.values;
-          if (!values) return prev;
-
-          return {
-            ...values,
-            messages: [...(values.messages ?? []), newMessage],
-          };
-        },
-      },
-    );
+    // Note: Edit functionality not yet implemented in FastAPI backend
+    console.warn("Edit functionality not yet implemented");
   };
 
   return (
@@ -125,12 +107,15 @@ export function HumanMessage({
             isEditing && "opacity-100",
           )}
         >
-          <BranchSwitcher
-            branch={meta?.branch}
-            branchOptions={meta?.branchOptions}
-            onSelect={(branch) => thread.setBranch(branch)}
-            isLoading={isLoading}
-          />
+          {/* Note: BranchSwitcher disabled - metadata/branch functionality not yet implemented */}
+          {/* {meta && (
+            <BranchSwitcher
+              branch={meta?.branch}
+              branchOptions={meta?.branchOptions}
+              onSelect={(branch) => thread.setBranch?.(branch)}
+              isLoading={isLoading}
+            />
+          )} */}
           <CommandBar
             isLoading={isLoading}
             content={contentString}

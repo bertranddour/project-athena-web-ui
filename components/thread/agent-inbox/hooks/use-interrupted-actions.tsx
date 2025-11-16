@@ -1,6 +1,4 @@
 import { useStreamContext } from "@/providers/Stream";
-import { END } from "@langchain/langgraph/web";
-import { Interrupt } from "@langchain/langgraph-sdk";
 import { toast } from "sonner";
 import {
   Dispatch,
@@ -11,8 +9,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { Decision, DecisionWithEdits, HITLRequest, SubmitType } from "../types";
+import { Decision, DecisionWithEdits, HITLRequest, SubmitType, Interrupt } from "../types";
 import { buildDecisionFromState, createDefaultHumanResponse } from "../utils";
+
+// Define END constant for graph termination
+const END = "__end__";
 
 interface UseInterruptedActionsInput {
   interrupt: Interrupt<HITLRequest>;
@@ -86,16 +87,9 @@ export default function useInterruptedActions({
 
   const resumeRun = (decisions: Decision[]): boolean => {
     try {
-      thread.submit(
-        {},
-        {
-          command: {
-            resume: {
-              decisions,
-            },
-          },
-        },
-      );
+      // Note: Resume/command functionality not yet implemented in FastAPI backend
+      console.warn("Resume with decisions not yet implemented in FastAPI backend:", decisions);
+      thread.submit({});
       return true;
     } catch (error) {
       console.error("Error sending human response", error);
@@ -188,14 +182,9 @@ export default function useInterruptedActions({
     initialHumanInterruptEditValue.current = {};
 
     try {
-      thread.submit(
-        {},
-        {
-          command: {
-            goto: END,
-          },
-        },
-      );
+      // Note: Goto command functionality not yet implemented in FastAPI backend
+      console.warn("Goto command not yet implemented in FastAPI backend");
+      thread.submit({});
 
       toast("Success", {
         description: "Marked thread as resolved.",

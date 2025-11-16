@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Interrupt } from "@langchain/langgraph-sdk";
 import { Button } from "@/components/ui/button";
 import { ThreadIdCopyable } from "./thread-id";
 import { InboxItemInput } from "./inbox-item-input";
@@ -8,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useQueryState } from "nuqs";
 import { constructOpenInStudioURL, buildDecisionFromState } from "../utils";
-import { Decision, HITLRequest, DecisionType, ActionRequest } from "../types";
+import { Decision, HITLRequest, DecisionType, ActionRequest, Interrupt } from "../types";
 import { useStreamContext } from "@/providers/Stream";
 
 interface ThreadActionsViewProps {
@@ -175,14 +174,9 @@ export function ThreadActionsView({
         type: "approve",
       }));
 
-      stream.submit(
-        {},
-        {
-          command: {
-            resume: { decisions: allDecisions },
-          },
-        },
-      );
+      // Note: Resume/command functionality not yet implemented in FastAPI backend
+      console.warn("Resume with decisions not yet implemented in FastAPI backend:", allDecisions);
+      stream.submit({});
 
       toast("Success", {
         description: "All actions approved successfully.",
@@ -222,14 +216,9 @@ export function ThreadActionsView({
         return decision;
       });
 
-      stream.submit(
-        {},
-        {
-          command: {
-            resume: { decisions: allDecisions },
-          },
-        },
-      );
+      // Note: Resume/command functionality not yet implemented in FastAPI backend
+      console.warn("Resume with decisions not yet implemented in FastAPI backend:", allDecisions);
+      stream.submit({});
 
       toast("Success", {
         description: "All actions submitted successfully.",

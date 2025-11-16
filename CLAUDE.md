@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Next.js 16 chat interface for LangGraph agents, built with React 19, TypeScript, and Tailwind CSS. The application enables real-time streaming conversations with LangGraph servers, supporting multimodal inputs (text, images, PDFs), artifact rendering in a side panel, and tool call visualization.
+This is a Next.js 16 chat interface for Anthropic Claude agents, built with React 19, TypeScript, and Tailwind CSS. The application enables real-time streaming conversations with the Anthropic Claude Agent SDK backend (project-athena-agent-anthropic), supporting multimodal inputs (text, images, PDFs), artifact rendering in a side panel, and tool call visualization.
+
+The backend is a FastAPI server that wraps the Anthropic Claude SDK and provides Server-Sent Events (SSE) streaming for real-time message delivery.
 
 ## Development Commands
 
@@ -24,15 +26,15 @@ The application uses a specific provider nesting order (see `app/page.tsx`):
 ThreadProvider → StreamProvider → ArtifactProvider → Thread
 ```
 
-- **ThreadProvider** (`providers/Thread.tsx`): Manages thread list fetching and state using the LangGraph SDK client. Uses `nuqs` for syncing `threadId` with URL params.
-- **StreamProvider** (`providers/Stream.tsx`): Wraps `useStream` from `@langchain/langgraph-sdk/react` to handle streaming messages, UI messages, and connection to the LangGraph server. Displays setup form if `NEXT_PUBLIC_API_URL` or `NEXT_PUBLIC_ASSISTANT_ID` are missing.
+- **ThreadProvider** (`providers/Thread.tsx`): Manages thread list fetching and state using a custom API client (`lib/api-client.ts`). Uses `nuqs` for syncing `threadId` with URL params.
+- **StreamProvider** (`providers/Stream.tsx`): Uses a custom `useStream` hook (`hooks/use-stream.ts`) to handle streaming messages via Server-Sent Events (SSE), optimistic UI updates, and connection to the FastAPI backend. Displays setup form if `NEXT_PUBLIC_API_URL` or `NEXT_PUBLIC_ASSISTANT_ID` are missing.
 - **ArtifactProvider** (`components/thread/artifact.tsx`): Portal-based system for rendering artifacts in a side panel. Uses React context to coordinate between artifact triggers in messages and the `ArtifactContent`/`ArtifactTitle` components.
 
 ### State Management
 
 - **URL State**: Uses `nuqs` library for managing `threadId`, `apiUrl`, `assistantId`, and `hideToolCalls` in URL query params
 - **LocalStorage**: API keys stored in `localStorage` via `lib/api-key.tsx`
-- **Stream State**: The `useStream` hook manages messages, loading states, and thread interrupts
+- **Stream State**: The custom `useStream` hook (`hooks/use-stream.ts`) manages messages via `stream.state.messages`, loading states via `stream.loading`, and thread interrupts via `stream.interrupt()`
 - **Artifact State**: Context-based state for opening/closing artifacts and passing context between runs
 
 ### Message Flow
@@ -54,18 +56,21 @@ Artifacts are rendered in a side panel using a portal-based architecture:
 - Artifacts can provide `context` that gets passed to subsequent runs via `stream.submit()`
 - The artifact panel appears to the right of the main chat when `artifactOpen` is true
 
-### API Passthrough
+### Backend Architecture
 
-Production deployments use `app/api/[..._path]/route.ts` which proxies requests to the LangGraph server:
-- Requires `LANGGRAPH_API_URL` and `LANGSMITH_API_KEY` env vars (server-side only)
-- Set `NEXT_PUBLIC_API_URL` to `https://your-domain.com/api` to route through the proxy
-- This avoids exposing LangSmith API keys to the client
+The application communicates with a FastAPI backend server that wraps the Anthropic Claude Agent SDK:
+
+- **API Client** (`lib/api-client.ts`): Custom HTTP client for making requests to the FastAPI backend
+- **SSE Streaming** (`lib/sse-stream.ts`): Utilities for parsing Server-Sent Events streams from the backend
+- **Custom useStream Hook** (`hooks/use-stream.ts`): React hook that manages streaming state, optimistic updates, and SSE connection lifecycle
+- Backend repository: `project-athena-agent-anthropic` (FastAPI + Anthropic SDK)
+
+The frontend connects directly to the FastAPI backend via `NEXT_PUBLIC_API_URL` (default: http://localhost:8000).
 
 ### Message Hiding
 
 Messages can be hidden from the UI:
-- Prefix message IDs with `do-not-render-` to hide permanently
-- Add `langsmith:nostream` tag to chat models to prevent streaming display
+- Prefix message IDs with `do-not-render-` to hide permanently (defined in `lib/ensure-tool-responses.ts` as `DO_NOT_RENDER_ID_PREFIX`)
 - Filtered in `components/thread/index.tsx` before mapping to message components
 
 ## Key Files and Patterns
@@ -77,7 +82,10 @@ All imports use `@/` prefix (e.g., `@/components/ui/button`) which maps to the p
 - `components/ui/` — Radix UI primitives styled with Tailwind
 - `components/thread/` — Chat-specific components (messages, artifact, syntax highlighting)
 - `components/thread/agent-inbox/` — Components for handling interrupted states and tool calls
-- `components/thread/messages/` — Individual message type renderers (`ai.tsx`, `human.tsx`, `tool-calls.tsx`)
+- `components/thread/messages/` — Individual message type renderers (`ai.tsx`, `human.tsx`, `tool-calls.tsx`, `generic-interrupt.tsx`)
+- `lib/` — Utility modules (API client, SSE streaming, multimodal utils, type definitions)
+- `hooks/` — Custom React hooks (`use-stream.ts`, `use-file-upload.ts`, etc.)
+- `providers/` — React context providers (`Stream.tsx`, `Thread.tsx`)
 
 ### Styling Conventions
 - Uses custom Tailwind utilities: `shadow-wave-button`, `shadow-wave-panel`, `shadow-wave-embossed`
@@ -94,12 +102,18 @@ The app supports multimodal content via `useFileUpload` hook:
 ## Environment Variables
 
 **Client-side (prefix with `NEXT_PUBLIC_`):**
-- `NEXT_PUBLIC_API_URL` — LangGraph API URL (or proxy URL like `https://example.com/api`)
-- `NEXT_PUBLIC_ASSISTANT_ID` — Graph/assistant ID to use
+- `NEXT_PUBLIC_API_URL` — FastAPI backend URL (default: `http://localhost:8000`)
+- `NEXT_PUBLIC_ASSISTANT_ID` — Assistant ID to use (default: `athena`)
+- `NEXT_PUBLIC_API_KEY` — Optional API key for authenticating requests to the backend
 
-**Server-side (for API passthrough):**
-- `LANGGRAPH_API_URL` — Actual LangGraph server URL
-- `LANGSMITH_API_KEY` — API key injected into proxied requests
+**Example `.env.local`:**
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_ASSISTANT_ID=athena
+# NEXT_PUBLIC_API_KEY=your-api-key-here
+```
+
+The backend server (project-athena-agent-anthropic) requires its own environment configuration with the Anthropic API key.
 
 ## Code Style
 
@@ -113,8 +127,28 @@ The app supports multimodal content via `useFileUpload` hook:
 ## Testing
 
 No automated test runner is configured. Manual QA should:
-- Test streaming with a LangGraph server
+- Start the FastAPI backend server (project-athena-agent-anthropic)
+- Test streaming conversations with the Anthropic Claude Agent
 - Verify artifact panel opening/closing
-- Test multimodal file uploads
+- Test multimodal file uploads (images and PDFs)
 - Verify tool call visibility toggle
 - Test thread history navigation
+- Verify thread persistence across page refreshes
+
+**Testing Workflow:**
+1. Start backend: `cd project-athena-agent-anthropic && uv run python -m src.api.main`
+2. Start frontend: `pnpm dev`
+3. Navigate to http://localhost:3000
+4. Test creating new threads and streaming responses
+
+## Known Limitations
+
+Some features from the original LangGraph implementation are not yet available in the Anthropic backend:
+- Message branching and metadata (`getMessagesMetadata`, `BranchSwitcher`)
+- Message editing functionality
+- Resume with command options (interrupt resume uses simplified API)
+- Custom UI components feature
+- Advanced stream options (streamMode, streamSubgraphs, streamResumable)
+- Error state handling (errors logged to console only)
+
+These limitations are documented in the code via `console.warn()` statements and comments.

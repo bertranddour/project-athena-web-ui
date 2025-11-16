@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { Interrupt } from "@langchain/langgraph-sdk";
 import { cn } from "@/lib/utils";
 import { useStreamContext } from "@/providers/Stream";
-import { HITLRequest } from "./types";
+import { HITLRequest, Interrupt } from "./types";
 import { StateView } from "./components/state-view";
 import { ThreadActionsView } from "./components/thread-actions-view";
 
@@ -62,7 +61,7 @@ export function ThreadView({ interrupt }: ThreadViewProps) {
         <StateView
           handleShowSidePanel={handleShowSidePanel}
           description={activeDescription}
-          values={thread.values}
+          values={thread.state}
           view={showState ? "state" : "description"}
         />
       ) : (

@@ -1,4 +1,4 @@
-import { BaseMessage, isBaseMessage } from "@langchain/core/messages";
+import { Message } from "@/lib/api-client";
 import { format } from "date-fns";
 import { startCase } from "lodash";
 import {
@@ -9,46 +9,41 @@ import {
   SubmitType,
 } from "./types";
 
+// Type guard for Message objects
+function isMessage(value: any): value is Message {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "type" in value &&
+    "content" in value &&
+    "id" in value
+  );
+}
+
 export function prettifyText(action: string) {
   return startCase(action.replace(/_/g, " "));
 }
 
 export function isArrayOfMessages(
   value: Record<string, any>[],
-): value is BaseMessage[] {
-  if (
-    value.every(isBaseMessage) ||
-    (Array.isArray(value) &&
-      value.every(
-        (v) =>
-          typeof v === "object" &&
-          "id" in v &&
-          "type" in v &&
-          "content" in v &&
-          "additional_kwargs" in v,
-      ))
-  ) {
-    return true;
-  }
-  return false;
+): value is Message[] {
+  return Array.isArray(value) && value.every(isMessage);
 }
 
 export function baseMessageObject(item: unknown): string {
-  if (isBaseMessage(item)) {
+  if (isMessage(item)) {
     const contentText =
       typeof item.content === "string"
         ? item.content
         : JSON.stringify(item.content, null);
     let toolCallText = "";
-    if ("tool_calls" in item) {
+    if ("tool_calls" in item && item.tool_calls) {
       toolCallText = JSON.stringify(item.tool_calls, null);
     }
-    if ("type" in item) {
-      return `${item.type}:${contentText ? ` ${contentText}` : ""}${toolCallText ? ` - Tool calls: ${toolCallText}` : ""}`;
-    } else if ("getType" in item) {
-      return `${(item as BaseMessage).getType()}:${contentText ? ` ${contentText}` : ""}${toolCallText ? ` - Tool calls: ${toolCallText}` : ""}`;
-    }
-  } else if (
+    return `${item.type}:${contentText ? ` ${contentText}` : ""}${toolCallText ? ` - Tool calls: ${toolCallText}` : ""}`;
+  }
+
+  if (
     typeof item === "object" &&
     item &&
     "type" in item &&

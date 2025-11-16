@@ -1,13 +1,10 @@
-import { parsePartialJson } from "@langchain/core/output_parsers";
 import { useStreamContext } from "@/providers/Stream";
-import { AIMessage, Checkpoint, Message } from "@langchain/langgraph-sdk";
+import { Message, ToolCall } from "@/lib/api-client";
 import { getContentString } from "../utils";
 import { BranchSwitcher, CommandBar } from "./shared";
 import { MarkdownText } from "../markdown-text";
-import { LoadExternalComponent } from "@langchain/langgraph-sdk/react-ui";
 import { cn } from "@/lib/utils";
 import { ToolCalls, ToolResult } from "./tool-calls";
-import { MessageContentComplex } from "@langchain/core/messages";
 import { Fragment } from "react/jsx-runtime";
 import { isAgentInboxInterruptSchema } from "@/lib/agent-inbox-interrupt";
 import { ThreadView } from "../agent-inbox";
@@ -15,6 +12,17 @@ import { useQueryState, parseAsBoolean } from "nuqs";
 import { GenericInterruptView } from "./generic-interrupt";
 import { useArtifact } from "../artifact";
 
+// Simple parsePartialJson implementation
+function parsePartialJson(input: string | Record<string, any>): Record<string, any> | null {
+  if (typeof input === "object") return input;
+  try {
+    return JSON.parse(input);
+  } catch {
+    return null;
+  }
+}
+
+// Custom components not yet implemented in FastAPI backend
 function CustomComponent({
   message,
   thread,
@@ -22,47 +30,25 @@ function CustomComponent({
   message: Message;
   thread: ReturnType<typeof useStreamContext>;
 }) {
-  const artifact = useArtifact();
-  const { values } = useStreamContext();
-  const customComponents = values.ui?.filter(
-    (ui) => ui.metadata?.message_id === message.id,
-  );
-
-  if (!customComponents?.length) return null;
-  return (
-    <Fragment key={message.id}>
-      {customComponents.map((customComponent) => (
-        <LoadExternalComponent
-          key={customComponent.id}
-          stream={thread}
-          message={customComponent}
-          meta={{ ui: customComponent, artifact }}
-        />
-      ))}
-    </Fragment>
-  );
+  // Custom UI components feature not yet implemented
+  return null;
 }
 
 function parseAnthropicStreamedToolCalls(
-  content: MessageContentComplex[],
-): AIMessage["tool_calls"] {
+  content: any[],
+): ToolCall[] {
   const toolCallContents = content.filter((c) => c.type === "tool_use" && c.id);
 
   return toolCallContents.map((tc) => {
     const toolCall = tc as Record<string, any>;
     let json: Record<string, any> = {};
     if (toolCall?.input) {
-      try {
-        json = parsePartialJson(toolCall.input) ?? {};
-      } catch {
-        // Pass
-      }
+      json = parsePartialJson(toolCall.input) ?? {};
     }
     return {
       name: toolCall.name ?? "",
       id: toolCall.id ?? "",
       args: json,
-      type: "tool_call",
     };
   });
 }
@@ -105,7 +91,7 @@ export function AssistantMessage({
 }: {
   message: Message | undefined;
   isLoading: boolean;
-  handleRegenerate: (parentCheckpoint: Checkpoint | null | undefined) => void;
+  handleRegenerate: () => void;
 }) {
   const content = message?.content ?? [];
   const contentString = getContentString(content);
@@ -116,14 +102,14 @@ export function AssistantMessage({
 
   const thread = useStreamContext();
   const isLastMessage =
-    thread.messages[thread.messages.length - 1].id === message?.id;
-  const hasNoAIOrToolMessages = !thread.messages.find(
+    thread.state.messages[thread.state.messages.length - 1]?.id === message?.id;
+  const hasNoAIOrToolMessages = !thread.state.messages.find(
     (m) => m.type === "ai" || m.type === "tool",
   );
-  const meta = message ? thread.getMessagesMetadata(message) : undefined;
+  // Note: getMessagesMetadata not yet implemented in custom useStream hook
+  const meta = undefined;
   const threadInterrupt = thread.interrupt;
 
-  const parentCheckpoint = meta?.firstSeenState?.parent_checkpoint;
   const anthropicStreamedToolCalls = Array.isArray(content)
     ? parseAnthropicStreamedToolCalls(content)
     : undefined;
@@ -196,17 +182,20 @@ export function AssistantMessage({
                 "opacity-0 group-focus-within:opacity-100 group-hover:opacity-100",
               )}
             >
-              <BranchSwitcher
-                branch={meta?.branch}
-                branchOptions={meta?.branchOptions}
-                onSelect={(branch) => thread.setBranch(branch)}
-                isLoading={isLoading}
-              />
+              {/* Note: BranchSwitcher disabled - metadata/branch functionality not yet implemented */}
+              {/* {meta && (
+                <BranchSwitcher
+                  branch={meta?.branch}
+                  branchOptions={meta?.branchOptions}
+                  onSelect={(branch) => thread.setBranch?.(branch)}
+                  isLoading={isLoading}
+                />
+              )} */}
               <CommandBar
                 content={contentString}
                 isLoading={isLoading}
                 isAiMessage={true}
-                handleRegenerate={() => handleRegenerate(parentCheckpoint)}
+                handleRegenerate={() => handleRegenerate()}
               />
             </div>
           </>

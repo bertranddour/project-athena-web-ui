@@ -1,6 +1,5 @@
-import { validate } from "uuid";
 import { getApiKey } from "@/lib/api-key";
-import { Thread } from "@langchain/langgraph-sdk";
+import { type Thread, getApiClient } from "@/lib/api-client";
 import { useQueryState } from "nuqs";
 import {
   createContext,
@@ -11,7 +10,6 @@ import {
   Dispatch,
   SetStateAction,
 } from "react";
-import { createClient } from "./client";
 
 interface ThreadContextType {
   getThreads: () => Promise<Thread[]>;
@@ -23,16 +21,6 @@ interface ThreadContextType {
 
 const ThreadContext = createContext<ThreadContextType | undefined>(undefined);
 
-function getThreadSearchMetadata(
-  assistantId: string,
-): { graph_id: string } | { assistant_id: string } {
-  if (validate(assistantId)) {
-    return { assistant_id: assistantId };
-  } else {
-    return { graph_id: assistantId };
-  }
-}
-
 export function ThreadProvider({ children }: { children: ReactNode }) {
   const [apiUrl] = useQueryState("apiUrl");
   const [assistantId] = useQueryState("assistantId");
@@ -41,16 +29,16 @@ export function ThreadProvider({ children }: { children: ReactNode }) {
 
   const getThreads = useCallback(async (): Promise<Thread[]> => {
     if (!apiUrl || !assistantId) return [];
-    const client = createClient(apiUrl, getApiKey() ?? undefined);
+    const client = getApiClient(apiUrl, getApiKey() ?? undefined);
 
-    const threads = await client.threads.search({
+    const response = await client.searchThreads({
       metadata: {
-        ...getThreadSearchMetadata(assistantId),
+        assistant_id: assistantId,
       },
       limit: 100,
     });
 
-    return threads;
+    return response.threads;
   }, [apiUrl, assistantId]);
 
   const value = {

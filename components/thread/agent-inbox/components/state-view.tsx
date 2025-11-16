@@ -8,8 +8,7 @@ import {
 } from "../utils";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { BaseMessage } from "@langchain/core/messages";
-import { ToolCall } from "@langchain/core/messages/tool";
+import { Message, ToolCall } from "@/lib/api-client";
 import { ToolCallTable } from "./tool-call-table";
 import { Button } from "@/components/ui/button";
 import { MarkdownText } from "../../markdown-text";
@@ -19,29 +18,20 @@ interface StateViewRecursiveProps {
   expanded?: boolean;
 }
 
-const messageTypeToLabel = (message: BaseMessage) => {
-  let type = "";
-  if ("type" in message) {
-    type = message.type as string;
-  } else if ("getType" in message) {
-    type = (message as BaseMessage).getType();
-  }
-
-  switch (type) {
+const messageTypeToLabel = (message: Message) => {
+  switch (message.type) {
     case "human":
       return "User";
     case "ai":
       return "Assistant";
     case "tool":
       return "Tool";
-    case "System":
-      return "System";
     default:
       return "";
   }
 };
 
-function MessagesRenderer({ messages }: { messages: BaseMessage[] }) {
+function MessagesRenderer({ messages }: { messages: Message[] }) {
   return (
     <div className="flex w-full flex-col gap-1">
       {messages.map((msg, idx) => {
@@ -57,9 +47,9 @@ function MessagesRenderer({ messages }: { messages: BaseMessage[] }) {
           >
             <p className="font-medium text-gray-700">{messageTypeLabel}:</p>
             {content && <MarkdownText>{content}</MarkdownText>}
-            {"tool_calls" in msg && msg.tool_calls ? (
+            {msg.tool_calls && msg.tool_calls.length > 0 ? (
               <div className="flex w-full flex-col items-start gap-1">
-                {(msg.tool_calls as ToolCall[]).map((tc, idx) => (
+                {msg.tool_calls.map((tc, idx) => (
                   <ToolCallTable
                     key={tc.id ?? `tool-call-${idx}`}
                     toolCall={tc}

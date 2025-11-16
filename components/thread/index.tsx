@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { useStreamContext } from "@/providers/Stream";
 import { useState, FormEvent } from "react";
 import { Button } from "../ui/button";
-import { Checkpoint, Message } from "@langchain/langgraph-sdk";
+import { Message } from "@/lib/api-client";
 import { AssistantMessage, AssistantMessageLoading } from "./messages/ai";
 import { HumanMessage } from "./messages/human";
 import {
@@ -101,8 +101,8 @@ export function Thread() {
   } = useFileUpload();
   const [firstTokenReceived, setFirstTokenReceived] = useState(false);
   const stream = useStreamContext();
-  const messages = stream.messages;
-  const isLoading = stream.isLoading;
+  const messages = stream.state.messages;
+  const isLoading = stream.loading;
 
   const lastError = useRef<string | undefined>(undefined);
 
@@ -114,33 +114,14 @@ export function Thread() {
     setArtifactContext({});
   };
 
-  useEffect(() => {
-    if (!stream.error) {
-      lastError.current = undefined;
-      return;
-    }
-    try {
-      const message = (stream.error as any).message;
-      if (!message || lastError.current === message) {
-        // Message has already been logged. do not modify ref, return early.
-        return;
-      }
-
-      // Message is defined, and it has not been logged yet. Save it, and send the error
-      lastError.current = message;
-      toast.error("An error occurred. Please try again.", {
-        description: (
-          <p>
-            <strong>Error:</strong> <code>{message}</code>
-          </p>
-        ),
-        richColors: true,
-        closeButton: true,
-      });
-    } catch {
-      // no-op
-    }
-  }, [stream.error]);
+  // Note: Error handling not yet implemented - errors are logged to console in useStream
+  // useEffect(() => {
+  //   if (!stream.error) {
+  //     lastError.current = undefined;
+  //     return;
+  //   }
+  //   ...
+  // }, [stream.error]);
 
   // TODO: this should be part of the useStream hook
   const prevMessageLength = useRef(0);
@@ -171,45 +152,25 @@ export function Thread() {
       ] as Message["content"],
     };
 
-    const toolMessages = ensureToolCallsHaveResponses(stream.messages);
+    const toolMessages = ensureToolCallsHaveResponses(stream.state.messages);
 
     const context =
       Object.keys(artifactContext).length > 0 ? artifactContext : undefined;
 
-    stream.submit(
-      { messages: [...toolMessages, newHumanMessage], context },
-      {
-        streamMode: ["values"],
-        streamSubgraphs: true,
-        streamResumable: true,
-        optimisticValues: (prev) => ({
-          ...prev,
-          context,
-          messages: [
-            ...(prev.messages ?? []),
-            ...toolMessages,
-            newHumanMessage,
-          ],
-        }),
-      },
-    );
+    // Note: Stream options (streamMode, streamSubgraphs, streamResumable, optimisticValues)
+    // not yet implemented - optimistic updates are built into our custom useStream hook
+    stream.submit({ messages: [...toolMessages, newHumanMessage], context });
 
     setInput("");
     setContentBlocks([]);
   };
 
-  const handleRegenerate = (
-    parentCheckpoint: Checkpoint | null | undefined,
-  ) => {
+  const handleRegenerate = () => {
     // Do this so the loading state is correct
     prevMessageLength.current = prevMessageLength.current - 1;
     setFirstTokenReceived(false);
-    stream.submit(undefined, {
-      checkpoint: parentCheckpoint,
-      streamMode: ["values"],
-      streamSubgraphs: true,
-      streamResumable: true,
-    });
+    // Note: Regenerate functionality not yet implemented in FastAPI backend
+    console.warn("Regenerate functionality not yet implemented");
   };
 
   const chatStarted = !!threadId || !!messages.length;
@@ -413,10 +374,10 @@ export function Thread() {
                       className="hidden"
                     />
                     <div className="ml-auto flex items-center gap-3">
-                      {stream.isLoading ? (
+                      {stream.loading ? (
                         <Button
                           key="stop"
-                          onClick={() => stream.stop()}
+                          onClick={() => stream.interrupt()}
                           variant="ghost"
                         >
                           <LoaderCircle className="size-4 animate-spin" />

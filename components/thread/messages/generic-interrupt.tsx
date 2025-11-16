@@ -46,7 +46,18 @@ export function GenericInterruptView({
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Handle undefined interrupt gracefully
+  if (!interrupt) {
+    return null;
+  }
+
   const contentStr = JSON.stringify(interrupt, null, 2);
+
+  // Additional safety check for contentStr
+  if (!contentStr) {
+    return null;
+  }
+
   const contentLines = contentStr.split("\n");
   const shouldTruncate = contentLines.length > 4 || contentStr.length > 500;
 

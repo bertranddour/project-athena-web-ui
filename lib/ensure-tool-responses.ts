@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
-import { Message, ToolMessage } from "@langchain/langgraph-sdk";
+import { Message } from "@/lib/api-client";
 
 export const DO_NOT_RENDER_ID_PREFIX = "do-not-render-";
 
 export function ensureToolCallsHaveResponses(messages: Message[]): Message[] {
-  const newMessages: ToolMessage[] = [];
+  const newMessages: Message[] = [];
 
   messages.forEach((message, index) => {
     if (message.type !== "ai" || message.tool_calls?.length === 0) {

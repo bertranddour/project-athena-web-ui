@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useThreads } from "@/providers/Thread";
-import { Thread } from "@langchain/langgraph-sdk";
+import { Thread } from "@/lib/api-client";
 import { useEffect } from "react";
 import { useQueryState } from "nuqs";
 

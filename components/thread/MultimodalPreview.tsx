@@ -1,10 +1,10 @@
 import React from "react";
 import { File, X as XIcon } from "lucide-react";
-import { ContentBlock } from "@langchain/core/messages";
+import { ContentBlock } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 export interface MultimodalPreviewProps {
-  block: ContentBlock.Multimodal.Data;
+  block: ContentBlock;
   removable?: boolean;
   onRemove?: () => void;
   className?: string;

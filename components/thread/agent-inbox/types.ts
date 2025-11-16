@@ -1,5 +1,12 @@
-import { BaseMessage } from "@langchain/core/messages";
-import { Interrupt, Thread, ThreadStatus } from "@langchain/langgraph-sdk";
+import { Message, Thread } from "@/lib/api-client";
+
+// Define Interrupt type locally since it's not in the FastAPI backend yet
+export interface Interrupt<T = any> {
+  id?: string;
+  value: T;
+}
+
+export type ThreadStatus = "idle" | "busy" | "interrupted" | "error";
 
 export type DecisionType = "approve" | "edit" | "reject";
 
@@ -54,7 +61,7 @@ export type Email = {
 
 export interface ThreadValues {
   email: Email;
-  messages: BaseMessage[];
+  messages: Message[];
   triage: {
     logic: string;
     response: string;
@@ -64,7 +71,7 @@ export interface ThreadValues {
 export type ThreadData<
   ThreadValues extends Record<string, any> = Record<string, any>,
 > = {
-  thread: Thread<ThreadValues>;
+  thread: Thread;
 } & (
   | {
       status: "interrupted";

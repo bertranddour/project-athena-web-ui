@@ -1,4 +1,4 @@
-import type { Message } from "@langchain/langgraph-sdk";
+import type { Message } from "@/lib/api-client";
 
 /**
  * Extracts a string summary from a message's content, supporting multimodal (text, image, file, etc.).

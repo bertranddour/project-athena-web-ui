@@ -1,5 +1,4 @@
-import { Interrupt } from "@langchain/langgraph-sdk";
-import { HITLRequest } from "@/components/thread/agent-inbox/types";
+import { HITLRequest, Interrupt } from "@/components/thread/agent-inbox/types";
 
 export function isAgentInboxInterruptSchema(
   value: unknown,

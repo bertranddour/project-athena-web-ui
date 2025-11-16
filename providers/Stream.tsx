@@ -5,15 +5,8 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { useStream } from "@langchain/langgraph-sdk/react";
-import { type Message } from "@langchain/langgraph-sdk";
-import {
-  uiMessageReducer,
-  isUIMessage,
-  isRemoveUIMessage,
-  type UIMessage,
-  type RemoveUIMessage,
-} from "@langchain/langgraph-sdk/react-ui";
+import { useStream, type UseStreamReturn, type UIMessage } from "@/hooks/use-stream";
+import { type Message } from "@/lib/api-client";
 import { useQueryState } from "nuqs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -26,20 +19,9 @@ import { useThreads } from "./Thread";
 import { toast } from "sonner";
 
 export type StateType = { messages: Message[]; ui?: UIMessage[] };
+export type { Message, UIMessage };
 
-const useTypedStream = useStream<
-  StateType,
-  {
-    UpdateType: {
-      messages?: Message[] | Message | string;
-      ui?: (UIMessage | RemoveUIMessage)[] | UIMessage | RemoveUIMessage;
-      context?: Record<string, unknown>;
-    };
-    CustomEventType: UIMessage | RemoveUIMessage;
-  }
->;
-
-type StreamContextType = ReturnType<typeof useTypedStream>;
+type StreamContextType = UseStreamReturn;
 const StreamContext = createContext<StreamContextType | undefined>(undefined);
 
 async function sleep(ms = 4000) {
@@ -54,7 +36,7 @@ async function checkGraphStatus(
     const res = await fetch(`${apiUrl}/info`, {
       ...(apiKey && {
         headers: {
-          "X-Api-Key": apiKey,
+          Authorization: `Bearer ${apiKey}`,
         },
       }),
     });
@@ -79,20 +61,13 @@ const StreamSession = ({
 }) => {
   const [threadId, setThreadId] = useQueryState("threadId");
   const { getThreads, setThreads } = useThreads();
-  const streamValue = useTypedStream({
+
+  const streamValue = useStream({
     apiUrl,
     apiKey: apiKey ?? undefined,
     assistantId,
     threadId: threadId ?? null,
     fetchStateHistory: true,
-    onCustomEvent: (event, options) => {
-      if (isUIMessage(event) || isRemoveUIMessage(event)) {
-        options.mutate((prev) => {
-          const ui = uiMessageReducer(prev.ui ?? [], event);
-          return { ...prev, ui };
-        });
-      }
-    },
     onThreadId: (id) => {
       setThreadId(id);
       // Refetch threads list when thread ID changes.
@@ -104,11 +79,11 @@ const StreamSession = ({
   useEffect(() => {
     checkGraphStatus(apiUrl, apiKey).then((ok) => {
       if (!ok) {
-        toast.error("Failed to connect to LangGraph server", {
+        toast.error("Failed to connect to Athena Agent server", {
           description: () => (
             <p>
-              Please ensure your graph is running at <code>{apiUrl}</code> and
-              your API key is correctly set (if connecting to a deployed graph).
+              Please ensure your server is running at <code>{apiUrl}</code> and
+              your API key is correctly set (if required).
             </p>
           ),
           duration: 10000,
@@ -127,8 +102,8 @@ const StreamSession = ({
 };
 
 // Default values for the form
-const DEFAULT_API_URL = "http://localhost:2024";
-const DEFAULT_ASSISTANT_ID = "agent";
+const DEFAULT_API_URL = "http://localhost:8000";
+const DEFAULT_ASSISTANT_ID = "athena";
 
 export const StreamProvider: React.FC<{ children: ReactNode }> = ({
   children,
@@ -170,12 +145,12 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
             <div className="flex flex-col items-start gap-2">
               <LangGraphLogoSVG className="h-7" />
               <h1 className="text-xl font-semibold tracking-tight">
-                Agent Chat
+                Athena Agent Chat
               </h1>
             </div>
             <p className="text-sm text-zinc-600">
-              Welcome to Agent Chat! Before you get started, you need to enter
-              the URL of the deployment and the assistant / graph ID.
+              Welcome to Athena Agent Chat! Before you get started, you need to enter
+              the URL of the API server and the assistant ID.
             </p>
           </div>
           <form
@@ -198,11 +173,10 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
           >
             <div className="flex flex-col gap-2">
               <Label htmlFor="apiUrl">
-                Deployment URL<span className="text-rose-500">*</span>
+                API URL<span className="text-rose-500">*</span>
               </Label>
               <p className="text-sm text-zinc-500">
-                This is the URL of your LangGraph deployment. Can be a local, or
-                production deployment.
+                This is the URL of your Athena Agent API server.
               </p>
               <Input
                 id="apiUrl"
@@ -214,12 +188,10 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
 
             <div className="flex flex-col gap-2">
               <Label htmlFor="assistantId">
-                Assistant / Graph ID<span className="text-rose-500">*</span>
+                Assistant ID<span className="text-rose-500">*</span>
               </Label>
               <p className="text-sm text-zinc-500">
-                This is the ID of the graph (can be the graph name), or
-                assistant to fetch threads from, and invoke when actions are
-                taken.
+                This is the ID of the assistant to use for conversations.
               </p>
               <Input
                 id="assistantId"
@@ -230,18 +202,16 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label htmlFor="apiKey">LangSmith API Key</Label>
+              <Label htmlFor="apiKey">API Key</Label>
               <p className="text-sm text-zinc-500">
-                This is <strong>NOT</strong> required if using a local LangGraph
-                server. This value is stored in your browser's local storage and
-                is only used to authenticate requests sent to your LangGraph
-                server.
+                Optional. This value is stored in your browser's local storage and
+                is only used to authenticate requests sent to your API server.
               </p>
               <PasswordInput
                 id="apiKey"
                 name="apiKey"
                 defaultValue={apiKey ?? ""}
-                placeholder="lsv2_pt_..."
+                placeholder="Optional API key..."
               />
             </div>
 
@@ -263,8 +233,8 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
   return (
     <StreamSession
       apiKey={apiKey}
-      apiUrl={apiUrl}
-      assistantId={assistantId}
+      apiUrl={finalApiUrl}
+      assistantId={finalAssistantId}
     >
       {children}
     </StreamSession>

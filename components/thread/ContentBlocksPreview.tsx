@@ -1,10 +1,10 @@
 import React from "react";
 import { MultimodalPreview } from "./MultimodalPreview";
 import { cn } from "@/lib/utils";
-import { ContentBlock } from "@langchain/core/messages";
+import { ContentBlock } from "@/lib/api-client";
 
 interface ContentBlocksPreviewProps {
-  blocks: ContentBlock.Multimodal.Data[];
+  blocks: ContentBlock[];
   onRemove: (idx: number) => void;
   size?: "sm" | "md" | "lg";
   className?: string;
