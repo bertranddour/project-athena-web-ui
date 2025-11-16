@@ -101,7 +101,7 @@ export default function ThreadHistory() {
   }, [getThreads, setThreads, setThreadsLoading]);
 
   return (
-    <div className="space-y-4 rounded-[1.8rem] border border-zinc-300/60 bg-zinc-200 p-6 shadow-wave-panel">
+    <div className="space-y-4 rounded-[1.8rem] border border-zinc-300/60 bg-zinc-200 p-6">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">

@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { ReactNode, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useStreamContext } from "@/providers/Stream";
 import { useState, FormEvent } from "react";
@@ -12,7 +13,6 @@ import {
   DO_NOT_RENDER_ID_PREFIX,
   ensureToolCallsHaveResponses,
 } from "@/lib/ensure-tool-responses";
-import { TooltipIconButton } from "./tooltip-icon-button";
 import { ArrowDown, LoaderCircle, SquarePen, XIcon, Plus } from "lucide-react";
 import { useQueryState, parseAsBoolean } from "nuqs";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
@@ -208,60 +208,58 @@ export function Thread() {
   const hasNoAIOrToolMessages = !messages.find(
     (m) => m.type === "ai" || m.type === "tool",
   );
+  const threadLabel = threadId ? `#${threadId.slice(0, 8)}` : "Thread new";
+  const conversationStatus = chatStarted
+    ? "Live session"
+    : "Waiting for a prompt";
+  const threadStatusText = `${threadLabel.toUpperCase()} • ${conversationStatus.toUpperCase()}`;
 
   return (
-    <div className="min-h-dvh bg-zinc-200 pb-16 pt-10">
+    <div className="min-h-dvh bg-zinc-200 pb-16 pt-8">
       <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
-        <header className="space-y-4 text-center">
-          <div className="flex justify-center">
-            <Image
-              src="/wave-artisan-logo.svg"
-              width={144}
-              height={144}
-              alt="Wave Artisans"
-              className="h-32 w-auto"
-            />
+        <header className="pb-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <Link
+              href="/"
+              aria-label="Wave Artisans home"
+              className="inline-flex items-center"
+            >
+              <Image
+                src="/wave-artisan-logo.svg"
+                width={120}
+                height={44}
+                alt="Wave Artisans"
+                className="h-11 w-auto"
+                priority
+              />
+            </Link>
+            <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
+              Shape · Balance · Ride
+            </p>
           </div>
-          <p className="text-xs uppercase tracking-[0.4em] text-zinc-500">
-            Wave Artisans Console
-          </p>
         </header>
 
         <div className="grid gap-8 lg:grid-cols-[320px,1fr]">
           <div className="space-y-6">
-            <div className="space-y-5 rounded-[1.8rem] border border-zinc-300/60 bg-zinc-200 p-6 shadow-wave-panel">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
-                    Session controls
-                  </p>
-                  <p className="text-sm text-zinc-600">
-                    Tune how traces render inside the console.
-                  </p>
-                </div>
-                <TooltipIconButton
-                  tooltip="Start new thread"
+            <div className="rounded-[1.5rem] border border-zinc-300/60 bg-zinc-200 px-4 py-3">
+              <div className="flex items-center gap-4">
+                <Button
                   variant="ghost"
+                  size="icon"
                   onClick={() => setThreadId(null)}
-                  className="size-9"
+                  className="size-12 rounded-full border border-zinc-300/60 bg-white/80 text-zinc-600 shadow-wave-button transition hover:bg-white"
+                  aria-label="Start new chat"
                 >
-                  <SquarePen className="size-4" />
-                </TooltipIconButton>
-              </div>
-
-              <div className="space-y-4 text-sm text-zinc-600">
-                <div className="flex items-center justify-between rounded-[1.5rem] border border-zinc-300/60 bg-zinc-100/80 px-4 py-3">
-                  <Label htmlFor="render-tool-calls">Hide tool calls</Label>
-                  <Switch
-                    id="render-tool-calls"
-                    checked={hideToolCalls ?? false}
-                    onChange={(event) => setHideToolCalls(event.target.checked)}
-                  />
+                  <SquarePen className="h-5 w-5 text-teal-400" />
+                </Button>
+                <div className="flex-1 text-center text-xs uppercase tracking-[0.35em] text-zinc-500">
+                  {threadStatusText}
                 </div>
-                <div className="flex items-center justify-between rounded-[1.5rem] border border-zinc-300/60 bg-zinc-100/60 px-4 py-3 text-xs uppercase tracking-[0.3em] text-zinc-500">
-                  <span>Thread</span>
-                  <span>{threadId ? threadId.slice(0, 8) : "new"}</span>
-                </div>
+                <Switch
+                  aria-label="Hide tool calls"
+                  checked={hideToolCalls ?? false}
+                  onChange={(event) => setHideToolCalls(event.target.checked)}
+                />
               </div>
             </div>
 
@@ -278,23 +276,6 @@ export function Thread() {
               )}
             >
               <div className="rounded-[1.8rem] bg-zinc-200 shadow-wave-embossed">
-                <div className="flex flex-col gap-1 border-b border-zinc-300/60 px-6 py-4">
-                  <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
-                    Conversation
-                  </p>
-                  <div className="flex items-center justify-between text-sm text-zinc-600">
-                    <span>
-                      {chatStarted ? "Live session" : "Waiting for a prompt"}
-                    </span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setThreadId(null)}
-                    >
-                      Reset
-                    </Button>
-                  </div>
-                </div>
                 <StickToBottom className="relative h-[70vh] max-h-[70vh]">
                   <StickyToBottomContent
                     className="scrollbar-pretty relative h-full overflow-y-auto"
