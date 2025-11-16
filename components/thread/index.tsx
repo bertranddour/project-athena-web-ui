@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { ReactNode, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter, useSearchParams as useNextSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useStreamContext } from "@/providers/Stream";
 import { useState, FormEvent } from "react";
@@ -13,10 +14,16 @@ import {
   DO_NOT_RENDER_ID_PREFIX,
   ensureToolCallsHaveResponses,
 } from "@/lib/ensure-tool-responses";
-import { ArrowDown, LoaderCircle, SquarePen, XIcon, Plus } from "lucide-react";
+import {
+  ArrowDown,
+  LoaderCircle,
+  SquarePen,
+  XIcon,
+  Plus,
+  History,
+} from "lucide-react";
 import { useQueryState, parseAsBoolean } from "nuqs";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
-import ThreadHistory from "./history";
 import { toast } from "sonner";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
@@ -74,6 +81,7 @@ function ScrollToBottom(props: { className?: string }) {
 export function Thread() {
   const [artifactContext, setArtifactContext] = useArtifactContext();
   const [artifactOpen, closeArtifact] = useArtifactOpen();
+  const router = useRouter();
 
   const [threadId, _setThreadId] = useQueryState("threadId");
   const [hideToolCalls, setHideToolCalls] = useQueryState(
@@ -213,6 +221,11 @@ export function Thread() {
     ? "Live session"
     : "Waiting for a prompt";
   const threadStatusText = `${threadLabel.toUpperCase()} • ${conversationStatus.toUpperCase()}`;
+  const searchParams = useNextSearchParams();
+  const queryString = searchParams.toString();
+  const historyHref = queryString ? `/history?${queryString}` : "/history";
+  const iconBubbleClass =
+    "neo-btn inline-flex size-12 items-center justify-center rounded-full border border-zinc-300/60 bg-white/80 text-zinc-600 shadow-wave-button transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-200";
 
   return (
     <div className="min-h-dvh bg-zinc-200 pb-16 pt-8">
@@ -242,16 +255,23 @@ export function Thread() {
         <div className="grid gap-8 lg:grid-cols-[320px,1fr]">
           <div className="space-y-6">
             <div className="rounded-[1.5rem] border border-zinc-300/60 bg-zinc-200 px-4 py-3">
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="ghost"
-                  size="icon"
+              <div className="flex items-center gap-5">
+                <button
+                  type="button"
                   onClick={() => setThreadId(null)}
-                  className="size-12 rounded-full border border-zinc-300/60 bg-white/80 text-zinc-600 shadow-wave-button transition hover:bg-white"
+                  className={iconBubbleClass}
                   aria-label="Start new chat"
                 >
                   <SquarePen className="h-5 w-5 text-teal-400" />
-                </Button>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => router.push(historyHref)}
+                  aria-label="Open thread history"
+                  className={iconBubbleClass}
+                >
+                  <History className="h-5 w-5 text-pink-400" />
+                </button>
                 <div className="flex-1 text-center text-xs uppercase tracking-[0.35em] text-zinc-500">
                   {threadStatusText}
                 </div>
@@ -263,7 +283,7 @@ export function Thread() {
               </div>
             </div>
 
-            <ThreadHistory />
+            {/* Thread history moved to separate page */}
           </div>
 
           <div className="space-y-6">
@@ -276,7 +296,7 @@ export function Thread() {
               )}
             >
               <div className="rounded-[1.8rem] bg-zinc-200 shadow-wave-embossed">
-                <StickToBottom className="relative h-[70vh] max-h-[70vh]">
+                <StickToBottom className="relative h-[60vh] max-h-[60vh]">
                   <StickyToBottomContent
                     className="scrollbar-pretty relative h-full overflow-y-auto"
                     contentClassName="mx-auto w-full max-w-3xl space-y-4 px-6 py-8"
@@ -336,7 +356,7 @@ export function Thread() {
                       <span className="sr-only">Close artifact</span>
                     </button>
                   </div>
-                  <ArtifactContent className="scrollbar-pretty max-h-[70vh] overflow-y-auto p-4 text-sm text-zinc-600" />
+                  <ArtifactContent className="scrollbar-pretty max-h-[60vh] overflow-y-auto p-4 text-sm text-zinc-600" />
                 </div>
               )}
             </div>
