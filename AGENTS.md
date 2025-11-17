@@ -19,12 +19,13 @@
 
 ## Testing Guidelines
 - No automated runner ships with the repo yet; include manual QA notes in every PR and, when practical, add React Testing Library specs alongside the component (`component-name.test.tsx`).
-- Exercise streaming flows by running `pnpm dev` against a LangGraph sandbox and documenting verified prompts, artifact panels, and settings forms.
+- Exercise streaming flows by running `pnpm dev` against the Athena Engine API. Sign in via the built-in Stack Auth handler, then verify prompts, artifact panels, settings forms, and SSE behaviors end-to-end.
 
 ## Commit & Pull Request Guidelines
 - Follow the existing Conventional Commit style (`feat:`, `fix:`, `chore:`, `docs:`). Scope optional but helpful (`feat(ui): add turn timer`). Keep subject lines under 72 characters.
 - Each PR should include: clear summary, screenshots or screen recordings for UI-facing changes, reproduction steps, and linked GitHub issues. Request review once `pnpm build` and `pnpm lint` pass locally, and mention any non-obvious trade-offs.
 
 ## Security & Configuration Tips
-- Never commit `.env*` files; document required keys (`NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_ASSISTANT_ID`) in the PR body instead.
-- Use the built-in API passthrough when debugging production links, and avoid logging LangSmith API keys—prefer server actions for any sensitive hops.
+- Never commit `.env*` files; document required keys (`NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_API_KEY`, `NEXT_PUBLIC_AGENT_ID`, `NEXT_PUBLIC_STACK_PROJECT_ID`, `NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY`, `STACK_SECRET_SERVER_KEY`) in the PR body instead.
+- All requests run through Stack Auth (`StackProvider`, `/handler/[...stack]`). Keep Stack credentials scoped to local `.env` files and ensure reviewers can authenticate before QAing changes.
+- Use the built-in API passthrough when debugging production links, and avoid logging LangSmith or Athena API secrets—prefer server actions for any sensitive hops.

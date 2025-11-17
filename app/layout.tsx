@@ -16,7 +16,7 @@ const nunito = Nunito_Sans({
 
 export const metadata: Metadata = {
   title: "Wave Artisans Console",
-  description: "A LangGraph-ready chat console restyled with the Wave Artisans UI kit.",
+  description: "An Athena Engine console restyled with the Wave Artisans UI kit.",
   metadataBase: new URL("https://agentchat.vercel.app"),
   icons: {
     icon: [
@@ -30,14 +30,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Wave Artisans Console",
     description:
-      "Chat with LangGraph agents inside a SoftUI-inspired console built with Tailwind 4.",
+      "Chat with Athena Engine agents inside a SoftUI-inspired console built with Tailwind 4.",
     images: ["/opengraph-image.png"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Wave Artisans Console",
     description:
-      "A neumorphic control room for LangGraph powered assistants.",
+      "A neumorphic control room for Athena-powered assistants.",
     images: ["/twitter-image.png"],
   },
 };

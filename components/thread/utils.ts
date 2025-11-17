@@ -1,15 +1,7 @@
-import type { Message } from "@/lib/api/client";
-
 /**
  * Extracts a string summary from a message's content.
- *
- * Athena Engine message format:
- * - content is a Record<string, any> where the structure depends on content_type
- * - For text messages: { text: "..." }
- * - For tool messages: { tool_name: "...", input: {...}, output: {...} }
- * - For image messages: { url: "...", media_type: "..." }
  */
-export function getContentString(content: Message["content"]): string {
+export function getContentString(content: unknown): string {
   // Handle null/undefined
   if (!content) return "";
 
@@ -17,21 +9,22 @@ export function getContentString(content: Message["content"]): string {
   if (typeof content === "string") return content;
 
   // If it's an object with a "text" property (Athena text message)
-  if (typeof content === "object" && "text" in content) {
-    return String(content.text);
+  if (content && typeof content === "object" && "text" in content) {
+    return String((content as { text: unknown }).text ?? "");
   }
 
   // If it's an array (legacy format)
   if (Array.isArray(content)) {
     const texts = content
-      .filter((c): c is { type: "text"; text: string } => c.type === "text")
+      .filter((c): c is { type: "text"; text: string } => c?.type === "text")
       .map((c) => c.text);
     return texts.join(" ");
   }
 
   // For tool use/results, return a placeholder
-  if ("tool_name" in content) {
-    return `[Tool: ${content.tool_name}]`;
+  if (content && typeof content === "object" && "tool_name" in content) {
+    const toolName = (content as { tool_name?: string }).tool_name ?? "tool";
+    return `[Tool: ${toolName}]`;
   }
 
   // Fallback: return empty string

@@ -6,7 +6,7 @@ import useInterruptedActions from "../hooks/use-interrupted-actions";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useQueryState } from "nuqs";
-import { constructOpenInStudioURL, buildDecisionFromState } from "../utils";
+import { buildDecisionFromState } from "../utils";
 import { Decision, HITLRequest, DecisionType, ActionRequest, Interrupt } from "../types";
 import { useStreamContext } from "@/providers/Stream";
 
@@ -87,7 +87,6 @@ export function ThreadActionsView({
 }: ThreadActionsViewProps) {
   const stream = useStreamContext();
   const [threadId] = useQueryState("threadId");
-  const [apiUrl] = useQueryState("apiUrl");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [addressedActions, setAddressedActions] = useState<
     Map<number, Decision>
@@ -151,21 +150,6 @@ export function ThreadActionsView({
     setAddressedActions(new Map());
   }, [interrupt]);
 
-  const handleOpenInStudio = () => {
-    if (!apiUrl) {
-      toast.error("Error", {
-        description: "Please set the LangGraph deployment URL in settings.",
-        duration: 5000,
-        richColors: true,
-        closeButton: true,
-      });
-      return;
-    }
-
-    const studioUrl = constructOpenInStudioURL(apiUrl, threadId ?? undefined);
-    window.open(studioUrl, "_blank");
-  };
-
   const handleApproveAll = useCallback(() => {
     if (!hasMultipleActions) return;
 
@@ -174,8 +158,8 @@ export function ThreadActionsView({
         type: "approve",
       }));
 
-      // Note: Resume/command functionality not yet implemented in FastAPI backend
-      console.warn("Resume with decisions not yet implemented in FastAPI backend:", allDecisions);
+      // Athena Engine interrupt resume has not shipped yet
+      console.warn("Resume with decisions not yet implemented in Athena Engine:", allDecisions);
       stream.submit({});
 
       toast("Success", {
@@ -216,8 +200,8 @@ export function ThreadActionsView({
         return decision;
       });
 
-      // Note: Resume/command functionality not yet implemented in FastAPI backend
-      console.warn("Resume with decisions not yet implemented in FastAPI backend:", allDecisions);
+      // Athena Engine interrupt resume has not shipped yet
+      console.warn("Resume with decisions not yet implemented in Athena Engine:", allDecisions);
       stream.submit({});
 
       toast("Success", {
@@ -309,16 +293,6 @@ export function ThreadActionsView({
           {threadId && <ThreadIdCopyable threadId={threadId} />}
         </div>
         <div className="flex flex-row items-center justify-start gap-2">
-          {apiUrl && (
-            <Button
-              size="sm"
-              variant="outline"
-              className="flex items-center gap-1 bg-white"
-              onClick={handleOpenInStudio}
-            >
-              Studio
-            </Button>
-          )}
           <ButtonGroup
             handleShowState={() => handleShowSidePanel(true, false)}
             handleShowDescription={() => handleShowSidePanel(false, true)}
@@ -430,7 +404,7 @@ export function ThreadActionsView({
 
       {!hasMultipleActions && streamFinished && (
         <p className="text-base font-medium text-green-600">
-          Successfully finished Graph invocation.
+          Successfully finished Athena session.
         </p>
       )}
     </div>

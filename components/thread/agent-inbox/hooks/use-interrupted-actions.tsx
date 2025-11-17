@@ -12,9 +12,6 @@ import {
 import { Decision, DecisionWithEdits, HITLRequest, SubmitType, Interrupt } from "../types";
 import { buildDecisionFromState, createDefaultHumanResponse } from "../utils";
 
-// Define END constant for graph termination
-const END = "__end__";
-
 interface UseInterruptedActionsInput {
   interrupt: Interrupt<HITLRequest>;
 }
@@ -87,8 +84,8 @@ export default function useInterruptedActions({
 
   const resumeRun = (decisions: Decision[]): boolean => {
     try {
-      // Note: Resume/command functionality not yet implemented in FastAPI backend
-      console.warn("Resume with decisions not yet implemented in FastAPI backend:", decisions);
+      // Athena Engine interrupt resume has not shipped yet
+      console.warn("Resume with decisions not yet implemented in Athena Engine:", decisions);
       thread.submit({});
       return true;
     } catch (error) {
@@ -150,9 +147,9 @@ export default function useInterruptedActions({
       errorOccurred = true;
 
       if ("message" in error && error.message.includes("Invalid assistant")) {
-        toast("Error: Invalid assistant ID", {
+        toast("Error: Invalid agent ID", {
           description:
-            "The provided assistant ID was not found in this graph. Please update the assistant ID in the settings and try again.",
+            "The provided agent ID was not found in Athena Engine. Please update the agent ID in the settings and try again.",
           richColors: true,
           closeButton: true,
           duration: 5000,
@@ -182,8 +179,8 @@ export default function useInterruptedActions({
     initialHumanInterruptEditValue.current = {};
 
     try {
-      // Note: Goto command functionality not yet implemented in FastAPI backend
-      console.warn("Goto command not yet implemented in FastAPI backend");
+      // Athena Engine does not yet expose a goto command for interrupts
+      console.warn("Goto command not yet implemented in Athena Engine");
       thread.submit({});
 
       toast("Success", {

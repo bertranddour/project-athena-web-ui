@@ -1,10 +1,9 @@
-import { useStreamContext } from "@/providers/Stream";
-import { Message } from "@/lib/api/client";
+import { Message } from "@/lib/api-client";
 import { useState } from "react";
 import { getContentString } from "../utils";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
-import { BranchSwitcher, CommandBar } from "./shared";
+import { CommandBar } from "./shared";
 import { MultimodalPreview } from "@/components/thread/MultimodalPreview";
 import { isBase64ContentBlock } from "@/lib/multimodal-utils";
 
@@ -41,9 +40,7 @@ export function HumanMessage({
   message: Message;
   isLoading: boolean;
 }) {
-  const thread = useStreamContext();
-  // Note: getMessagesMetadata not yet implemented in custom useStream hook
-  const meta = undefined;
+  // Note: getMessagesMetadata not yet implemented in custom Athena stream hook
 
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState("");
@@ -51,7 +48,7 @@ export function HumanMessage({
 
   const handleSubmitEdit = () => {
     setIsEditing(false);
-    // Note: Edit functionality not yet implemented in FastAPI backend
+    // Note: Edit functionality not yet implemented in Athena Engine
     console.warn("Edit functionality not yet implemented");
   };
 

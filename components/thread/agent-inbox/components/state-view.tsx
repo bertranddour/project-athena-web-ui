@@ -8,7 +8,7 @@ import {
 } from "../utils";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Message, ToolCall } from "@/lib/api-client";
+import { Message } from "@/lib/api-client";
 import { ToolCallTable } from "./tool-call-table";
 import { Button } from "@/components/ui/button";
 import { MarkdownText } from "../../markdown-text";

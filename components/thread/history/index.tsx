@@ -107,7 +107,7 @@ export default function ThreadHistory() {
           <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
             Thread History
           </p>
-          <p className="text-sm text-zinc-600">Recent LangGraph runs</p>
+          <p className="text-sm text-zinc-600">Recent Athena sessions</p>
         </div>
         <Button
           variant="ghost"

@@ -1,6 +1,6 @@
-import { Message, Thread } from "@/lib/api-client";
+import { Thread } from "@/lib/api-client";
 
-// Define Interrupt type locally since it's not in the FastAPI backend yet
+// Define Interrupt type locally since it's not in the Athena Engine API yet
 export interface Interrupt<T = any> {
   id?: string;
   value: T;
@@ -59,18 +59,7 @@ export type Email = {
   status?: "in-queue" | "processing" | "hitl" | "done";
 };
 
-export interface ThreadValues {
-  email: Email;
-  messages: Message[];
-  triage: {
-    logic: string;
-    response: string;
-  };
-}
-
-export type ThreadData<
-  ThreadValues extends Record<string, any> = Record<string, any>,
-> = {
+export type ThreadData = {
   thread: Thread;
 } & (
   | {

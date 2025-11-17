@@ -24,7 +24,6 @@ import {
 } from "lucide-react";
 import { useQueryState, parseAsBoolean } from "nuqs";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
-import { toast } from "sonner";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
 import { useFileUpload } from "@/hooks/use-file-upload";
@@ -104,8 +103,6 @@ export function Thread() {
   const messages = stream.state.messages;
   const isLoading = stream.loading;
 
-  const lastError = useRef<string | undefined>(undefined);
-
   const setThreadId = (id: string | null) => {
     _setThreadId(id);
 
@@ -114,16 +111,7 @@ export function Thread() {
     setArtifactContext({});
   };
 
-  // Note: Error handling not yet implemented - errors are logged to console in useStream
-  // useEffect(() => {
-  //   if (!stream.error) {
-  //     lastError.current = undefined;
-  //     return;
-  //   }
-  //   ...
-  // }, [stream.error]);
-
-  // TODO: this should be part of the useStream hook
+  // TODO: this should be part of the useAthenaStream hook
   const prevMessageLength = useRef(0);
   useEffect(() => {
     if (
@@ -158,7 +146,7 @@ export function Thread() {
       Object.keys(artifactContext).length > 0 ? artifactContext : undefined;
 
     // Note: Stream options (streamMode, streamSubgraphs, streamResumable, optimisticValues)
-    // not yet implemented - optimistic updates are built into our custom useStream hook
+    // not yet implemented - optimistic updates are built into our Athena stream hook
     stream.submit({ messages: [...toolMessages, newHumanMessage], context });
 
     setInput("");
@@ -169,7 +157,7 @@ export function Thread() {
     // Do this so the loading state is correct
     prevMessageLength.current = prevMessageLength.current - 1;
     setFirstTokenReceived(false);
-    // Note: Regenerate functionality not yet implemented in FastAPI backend
+    // Note: Regenerate functionality not yet implemented in Athena Engine
     console.warn("Regenerate functionality not yet implemented");
   };
 

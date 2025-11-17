@@ -1,16 +1,14 @@
 import { useStreamContext } from "@/providers/Stream";
 import { Message, ToolCall } from "@/lib/api-client";
 import { getContentString } from "../utils";
-import { BranchSwitcher, CommandBar } from "./shared";
+import { CommandBar } from "./shared";
 import { MarkdownText } from "../markdown-text";
 import { cn } from "@/lib/utils";
 import { ToolCalls, ToolResult } from "./tool-calls";
-import { Fragment } from "react/jsx-runtime";
 import { isAgentInboxInterruptSchema } from "@/lib/agent-inbox-interrupt";
 import { ThreadView } from "../agent-inbox";
 import { useQueryState, parseAsBoolean } from "nuqs";
 import { GenericInterruptView } from "./generic-interrupt";
-import { useArtifact } from "../artifact";
 
 // Simple parsePartialJson implementation
 function parsePartialJson(input: string | Record<string, any>): Record<string, any> | null {
@@ -22,7 +20,7 @@ function parsePartialJson(input: string | Record<string, any>): Record<string, a
   }
 }
 
-// Custom components not yet implemented in FastAPI backend
+// Custom components not yet implemented in Athena Engine
 function CustomComponent({
   message,
   thread,
@@ -106,8 +104,7 @@ export function AssistantMessage({
   const hasNoAIOrToolMessages = !thread.state.messages.find(
     (m) => m.type === "ai" || m.type === "tool",
   );
-  // Note: getMessagesMetadata not yet implemented in custom useStream hook
-  const meta = undefined;
+  // Note: getMessagesMetadata not yet implemented in custom Athena stream hook
   const threadInterrupt = thread.interrupt;
 
   const anthropicStreamedToolCalls = Array.isArray(content)

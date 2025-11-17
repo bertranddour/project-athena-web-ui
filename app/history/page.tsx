@@ -32,7 +32,7 @@ function HistoryPageContent() {
                 Thread history
               </p>
               <p className="text-sm text-zinc-600">
-                Review and reopen recent LangGraph runs.
+                Review and reopen recent Athena sessions.
               </p>
             </div>
             <button
