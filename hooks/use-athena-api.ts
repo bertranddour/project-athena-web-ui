@@ -20,7 +20,7 @@ export function useAthenaApi() {
       throw new Error("User not authenticated. Please log in to use the API.");
     }
     return createAthenaApi(user.id);
-  }, [user?.id]);
+  }, [user]);
 
   return api;
 }

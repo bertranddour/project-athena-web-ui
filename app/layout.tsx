@@ -4,6 +4,8 @@ import { Nunito_Sans } from "next/font/google";
 import React from "react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { cn } from "@/lib/utils";
+import { StackProvider, StackTheme } from "@stackframe/stack";
+import { stackClientApp } from "@/stack/client";
 
 const nunito = Nunito_Sans({
   subsets: ["latin"],
@@ -48,7 +50,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn("bg-zinc-200 text-zinc-800", nunito.className)}>
-        <NuqsAdapter>{children}</NuqsAdapter>
+        <StackProvider app={stackClientApp}>
+          <StackTheme>
+            <NuqsAdapter>{children}</NuqsAdapter>
+          </StackTheme>
+        </StackProvider>
       </body>
     </html>
   );

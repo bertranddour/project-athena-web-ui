@@ -5,8 +5,6 @@
  * Handles authentication with API keys and Stack Auth user IDs.
  */
 
-import { stackClientApp } from "@/stack/client";
-
 // API Configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY!;
@@ -23,16 +21,23 @@ async function apiFetch<T>(
   options: RequestInit = {},
   userId?: string
 ): Promise<T> {
-  if (!userId) {
-    throw new Error("User not authenticated. Please log in.");
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  // Add existing headers from options
+  if (options.headers) {
+    const existingHeaders = new Headers(options.headers);
+    existingHeaders.forEach((value, key) => {
+      headers[key] = value;
+    });
   }
 
-  const headers = {
-    "Content-Type": "application/json",
-    "X-API-Key": API_KEY,
-    "X-User-ID": userId,
-    ...options.headers,
-  };
+  // Add authentication headers only if userId is provided
+  if (userId) {
+    headers["X-API-Key"] = API_KEY;
+    headers["X-User-ID"] = userId;
+  }
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
@@ -44,6 +49,15 @@ async function apiFetch<T>(
       error: "unknown_error",
       message: response.statusText,
     }));
+
+    // Log detailed error for debugging
+    console.error("API request failed:", {
+      endpoint,
+      status: response.status,
+      statusText: response.statusText,
+      errorData,
+    });
+
     throw new Error(errorData.message || errorData.detail || "API request failed");
   }
 

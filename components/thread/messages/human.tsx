@@ -1,5 +1,5 @@
 import { useStreamContext } from "@/providers/Stream";
-import { Message } from "@/lib/api-client";
+import { Message } from "@/lib/api/client";
 import { useState } from "react";
 import { getContentString } from "../utils";
 import { cn } from "@/lib/utils";

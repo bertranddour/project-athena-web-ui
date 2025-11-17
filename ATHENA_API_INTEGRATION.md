@@ -67,62 +67,60 @@ NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY=pck_586anhepet66x5te41vjc6vnrx5h2p0g2a5
 STACK_SECRET_SERVER_KEY=ssk_69qf3av220b0wrkvjm4xfekb6634e051nhqqh0eg4f84r
 ```
 
-## 🚧 To Do
+## ✅ Refactoring Complete
 
-### 1. Refactor Thread Provider (`providers/Thread.tsx`)
+### 1. Thread Provider (`providers/Thread.tsx`) ✓
 
-Current implementation uses old API client. Needs to:
+**Changes:**
+- Replaced old API client with Athena API using Stack Auth
+- Uses `createAthenaApi(user.id)` for authenticated requests
+- Maps `Session` objects to legacy `Thread` format for UI compatibility
+- Added `agentId` query parameter support
+- Handles authentication gracefully with proper error handling
 
-```typescript
-import { useAthenaApi } from "@/hooks/use-athena-api";
+### 2. Stream Provider (`providers/Stream.tsx`) ✓
 
-export function ThreadProvider({ children }: { children: ReactNode }) {
-  const api = useAthenaApi();
+**Changes:**
+- Removed old setup form (now uses Stack Auth for authentication)
+- Created new `useAthenaStream` hook for SSE streaming
+- Uses Stack Auth's `useUser()` hook for authentication
+- Redirects to `/handler/sign-in` if user not authenticated
+- Checks API health on mount and displays toast on connection issues
+- Updated to use `agentId` instead of `assistantId`
 
-  const getThreads = useCallback(async () => {
-    // Replace with: api.sessions.list()
-    const { sessions } = await api.sessions.list({
-      status: "active",
-      limit: 100,
-    });
-    return sessions;
-  }, [api]);
+### 3. New Hook: `useAthenaStream` (`hooks/use-athena-stream.ts`) ✓
 
-  // ...
-}
-```
+**Features:**
+- Handles SSE streaming from Athena Engine API
+- Maps Athena API message format to legacy format for UI compatibility
+- Processes all stream events:
+  - `stream_start` - Initialize new AI message
+  - `content_delta` - Accumulate text chunks
+  - `tool_use_start` - Track tool calls
+  - `tool_use_result` - Add tool result messages
+  - `message_complete` - Finalize message
+  - `usage_metrics` - Log token usage
+  - `stream_end` - Stream complete
+  - `stream_error` - Handle errors
+- Supports session creation and history fetching
+- Handles optimistic UI updates
 
-### 2. Refactor Stream Provider (`providers/Stream.tsx`)
+### 4. Root Layout (`app/layout.tsx`) ✓
 
-Update to use SSE streaming from Athena Engine:
+**Changes:**
+- Added `StackProvider` and `StackTheme` wrappers
+- Ensures Stack Auth context is available throughout the app
 
-```typescript
-const streamMessage = async (sessionId: string, content: string) => {
-  for await (const event of api.sessions.streamMessage(sessionId, content)) {
-    switch (event.event_type) {
-      case "content_delta":
-        // Append event.delta to message
-        break;
-      case "message_complete":
-        // Finalize message
-        break;
-      case "usage_metrics":
-        // Update token/cost display
-        break;
-    }
-  }
-};
-```
+### 5. Environment Configuration (`.env.local`) ✓
 
-### 3. Update Thread Component (`components/thread/index.tsx`)
+**Added:**
+- `NEXT_PUBLIC_AGENT_ID=athena` - Default agent to use
 
-- Replace thread ID logic with session ID
-- Update message rendering for Athena message format
-- Handle streaming events (content_delta, tool_use_start, etc.)
+## 🚧 Remaining To Do (Optional)
 
-### 4. Create Agent Management UI
+### 1. Create Agent Management UI (Optional)
 
-New page for managing agents (optional):
+New page for managing agents:
 
 ```typescript
 // app/agents/page.tsx
@@ -138,42 +136,14 @@ const AgentsPage = () => {
 };
 ```
 
-### 5. Update Session/Thread Mapping
-
-**Athena Concept**: Sessions (with agent_definition_id)
-**Current UI**: Threads (with assistant_id)
-
-Map between them:
-- Create session → Use agent definition ID
-- List sessions → Display as threads in sidebar
-- Session title → Thread name
-
-### 6. Authentication Flow
-
-Ensure proper auth flow:
-
-1. User not logged in → Redirect to `/handler/sign-in`
-2. User logged in → Create API client with `user.id`
-3. API calls → Include `X-API-Key` and `X-User-ID`
-4. API errors → Handle 401/403 gracefully
-
-### 7. Environment-Specific Configuration
+### 2. Environment-Specific Configuration (Optional)
 
 Create `.env.production` for production:
 
 ```env
 NEXT_PUBLIC_API_URL=https://api.athena-engine.com
 NEXT_PUBLIC_API_KEY=<production_api_key>
-```
-
-### 8. Error Handling
-
-Add global error boundary for API errors:
-
-```typescript
-if (error.message.includes("not authenticated")) {
-  router.push("/handler/sign-in");
-}
+NEXT_PUBLIC_AGENT_ID=<default_agent_id>
 ```
 
 ## 📝 API Event Types
@@ -282,8 +252,46 @@ No additional packages needed for API integration!
 
 ---
 
-**Status**: API client complete ✅ | UI refactor in progress 🚧
+**Status**: API client complete ✅ | UI refactor complete ✅
 
 **Branch**: `api-integration`
 
-**Last Updated**: 2025-11-16
+**Last Updated**: 2025-01-16
+
+## 📝 Migration Summary
+
+### What Changed
+
+1. **Authentication**: Now uses Stack Auth instead of manual API key management
+   - Users must sign in via `/handler/sign-in` (Stack Auth UI)
+   - API client automatically includes `X-User-ID` from Stack Auth
+
+2. **API Client**: Switched from old FastAPI client to Athena Engine API
+   - Old: `lib/api-client.ts` (threads-based)
+   - New: `lib/api/client.ts` (sessions-based)
+
+3. **Streaming**: New SSE streaming implementation
+   - Old: `hooks/use-stream.ts` (basic SSE)
+   - New: `hooks/use-athena-stream.ts` (full event handling)
+
+4. **Query Parameters**: Updated URL params
+   - Old: `apiUrl`, `assistantId`, `threadId`
+   - New: `agentId`, `threadId` (sessionId)
+
+5. **Provider Hierarchy**: Added Stack Auth
+   - `StackProvider` → `ThreadProvider` → `StreamProvider` → `ArtifactProvider` → `Thread`
+
+### Breaking Changes
+
+- **Authentication Required**: Users must sign in with Stack Auth before using the app
+- **Environment Variables**: Added `NEXT_PUBLIC_AGENT_ID` (replaces `NEXT_PUBLIC_ASSISTANT_ID`)
+- **API Format**: Messages now use Athena Engine format (mapped to legacy format for UI compatibility)
+
+### Migration Checklist
+
+- ✅ Update `.env.local` with Stack Auth credentials
+- ✅ Ensure Athena Engine API is running at `NEXT_PUBLIC_API_URL`
+- ✅ Create an agent definition with ID matching `NEXT_PUBLIC_AGENT_ID`
+- ✅ Build and test locally: `pnpm build && pnpm dev`
+- ✅ Sign in via Stack Auth at `/handler/sign-in`
+- ✅ Test creating new sessions and streaming messages
