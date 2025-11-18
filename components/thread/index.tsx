@@ -201,34 +201,36 @@ export function Thread() {
         <div className="grid gap-8 lg:grid-cols-[320px,1fr]">
           <div className="space-y-6">
             <div className="rounded-[1.5rem] border border-zinc-300/60 bg-zinc-200 px-4 py-3">
-              <div className="flex items-center gap-5">
-                <button
-                  type="button"
-                  onClick={() => setThreadId(null)}
-                  className={iconBubbleClass}
-                  aria-label="Start new chat"
-                >
-                  <SquarePen className="h-5 w-5 text-teal-400" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => router.push(historyHref)}
-                  aria-label="Open thread history"
-                  className={iconBubbleClass}
-                >
-                  <History className="h-5 w-5 text-pink-400" />
-                </button>
+              <div className="flex w-full flex-wrap items-center gap-5">
+                <div className="flex items-center gap-5">
+                  <button
+                    type="button"
+                    onClick={() => setThreadId(null)}
+                    className={iconBubbleClass}
+                    aria-label="Start new chat"
+                  >
+                    <SquarePen className="h-5 w-5 text-teal-400" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => router.push(historyHref)}
+                    aria-label="Open thread history"
+                    className={iconBubbleClass}
+                  >
+                    <History className="h-5 w-5 text-pink-400" />
+                  </button>
+                </div>
+                <div className="flex-1 text-center text-xs uppercase tracking-[0.35em] text-zinc-500">
+                  {threadStatusText}
+                </div>
                 <button
                   type="button"
                   onClick={() => router.push(settingsHref)}
                   aria-label="Open settings"
-                  className={iconBubbleClass}
+                  className={cn(iconBubbleClass, "ml-auto")}
                 >
                   <Settings2 className="h-5 w-5 text-blue-400" />
                 </button>
-                <div className="flex-1 text-center text-xs uppercase tracking-[0.35em] text-zinc-500">
-                  {threadStatusText}
-                </div>
               </div>
             </div>
 
