@@ -1,5 +1,5 @@
-import { StackHandler } from "@stackframe/stack";
+import { redirect } from "next/navigation";
 
-export default function Handler() {
-  return <StackHandler fullPage />;
+export default function StackHandlerRedirect() {
+  redirect("/auth/sign-in");
 }

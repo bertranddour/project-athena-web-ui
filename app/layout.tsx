@@ -7,6 +7,30 @@ import { cn } from "@/lib/utils";
 import { StackProvider, StackTheme } from "@stackframe/stack";
 import { stackClientApp } from "@/stack/client";
 
+const stackTheme = {
+  light: {
+    background: "#f4f4f5",
+    foreground: "#18181b",
+    card: "#f5f5f4",
+    cardForeground: "#18181b",
+    primary: "#e4e4e7",
+    primaryForeground: "#18181b",
+    secondary: "#f4f4f5",
+    secondaryForeground: "#292524",
+    muted: "#e7e5e4",
+    mutedForeground: "#52525b",
+    accent: "#fafaf9",
+    accentForeground: "#27272a",
+    destructive: "#fca5a5",
+    destructiveForeground: "#7f1d1d",
+    border: "#e4e4e7",
+    input: "#e4e4e7",
+    ring: "#cbd5f5",
+  },
+  dark: {},
+  radius: "24px",
+};
+
 const nunito = Nunito_Sans({
   subsets: ["latin"],
   preload: true,
@@ -51,7 +75,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn("bg-zinc-200 text-zinc-800", nunito.className)}>
         <StackProvider app={stackClientApp}>
-          <StackTheme>
+          <StackTheme theme={stackTheme}>
             <NuqsAdapter>{children}</NuqsAdapter>
           </StackTheme>
         </StackProvider>

@@ -116,6 +116,59 @@ button {
   }
 }
 
+@layer components {
+  .stack-auth-card {
+    @apply mx-auto flex w-full max-w-xl flex-col items-center gap-6 rounded-[2rem] bg-zinc-200 p-10 text-center;
+    box-shadow: 25px 25px 60px var(--zinc-400), -25px -25px 60px var(--zinc-50);
+  }
+
+  .stack-auth-card form {
+    @apply mx-auto w-full max-w-sm space-y-4 text-left;
+  }
+
+  .stack-auth-card input[type="email"],
+  .stack-auth-card input[type="password"],
+  .stack-auth-card input[type="text"],
+  .stack-auth-card input[type="tel"],
+  .stack-auth-card input[type="url"],
+  .stack-auth-card input[type="number"],
+  .stack-auth-card input[inputmode="numeric"],
+  .stack-auth-card input[autocomplete="one-time-code"],
+  .stack-auth-card input:not([type]) {
+    @apply w-full rounded-2xl bg-zinc-200 px-4 py-3 text-sm text-zinc-700 focus:outline-none;
+    box-shadow: inset 8px 8px 20px var(--zinc-300), inset -8px -8px 20px var(--zinc-50);
+    border: none;
+  }
+
+  .stack-auth-card button[type="submit"],
+  .stack-auth-card button[data-stack-button] {
+    @apply w-full rounded-full bg-zinc-200 px-8 py-3 text-[11px] font-semibold uppercase tracking-[0.35em] text-zinc-700 transition;
+    box-shadow: 12px 12px 32px var(--zinc-400), -12px -12px 32px var(--zinc-50);
+    font-family: "Nunito Sans", sans-serif;
+    letter-spacing: 0.35em;
+  }
+
+
+
+  .stack-auth-card button[type="submit"]:hover,
+  .stack-auth-card button[data-stack-button]:hover {
+    @apply text-zinc-900;
+  }
+
+  .stack-auth-card a {
+    @apply text-sm text-zinc-600 underline-offset-2 hover:text-zinc-800;
+  }
+}
+
+.otp-grid {
+  @apply grid grid-cols-6 gap-3 justify-items-center;
+}
+
+.otp-input {
+  @apply h-14 w-full max-w-12 rounded-2xl bg-zinc-200 text-center text-2xl font-semibold tracking-widest text-zinc-800 focus:outline-none;
+  box-shadow: inset 8px 8px 20px var(--zinc-300), inset -8px -8px 20px var(--zinc-50);
+}
+
 input.wave-toggle {
   appearance: none;
   width: 68px;

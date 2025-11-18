@@ -21,11 +21,11 @@ import {
   XIcon,
   Plus,
   History,
+  Settings2,
 } from "lucide-react";
-import { useQueryState, parseAsBoolean } from "nuqs";
+import { useQueryState } from "nuqs";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import { Label } from "../ui/label";
-import { Switch } from "../ui/switch";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { ContentBlocksPreview } from "./ContentBlocksPreview";
 import {
@@ -83,10 +83,6 @@ export function Thread() {
   const router = useRouter();
 
   const [threadId, _setThreadId] = useQueryState("threadId");
-  const [hideToolCalls, setHideToolCalls] = useQueryState(
-    "hideToolCalls",
-    parseAsBoolean.withDefault(false),
-  );
   const [input, setInput] = useState("");
   const {
     contentBlocks,
@@ -173,6 +169,7 @@ export function Thread() {
   const searchParams = useNextSearchParams();
   const queryString = searchParams.toString();
   const historyHref = queryString ? `/history?${queryString}` : "/history";
+  const settingsHref = queryString ? `/settings?${queryString}` : "/settings";
   const iconBubbleClass =
     "neo-btn inline-flex size-12 items-center justify-center rounded-full border border-zinc-300/60 bg-white/80 text-zinc-600 shadow-wave-button transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-200";
 
@@ -221,14 +218,17 @@ export function Thread() {
                 >
                   <History className="h-5 w-5 text-pink-400" />
                 </button>
+                <button
+                  type="button"
+                  onClick={() => router.push(settingsHref)}
+                  aria-label="Open settings"
+                  className={iconBubbleClass}
+                >
+                  <Settings2 className="h-5 w-5 text-blue-400" />
+                </button>
                 <div className="flex-1 text-center text-xs uppercase tracking-[0.35em] text-zinc-500">
                   {threadStatusText}
                 </div>
-                <Switch
-                  aria-label="Hide tool calls"
-                  checked={hideToolCalls ?? false}
-                  onChange={(event) => setHideToolCalls(event.target.checked)}
-                />
               </div>
             </div>
 
